@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sana Tu Mundo - Programa Interactivo</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',sans-serif;background:#0f0f23;color:#e8e8f0;min-height:100vh}
+.lock-screen{display:flex;align-items:center;justify-content:center;min-height:100vh;background:linear-gradient(135deg,#1a1a3e,#0f0f23);padding:20px}
+.lock-card{background:linear-gradient(135deg,#1e1e4a,#252550);border:1px solid #4a4aaa;border-radius:20px;padding:40px;max-width:440px;width:100%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.5)}
+.lock-logo{font-size:3.5rem;margin-bottom:15px}
+.lock-title{font-size:1.8rem;font-weight:700;color:#a78bfa;margin-bottom:8px}
+.lock-sub{color:#9ca3af;margin-bottom:30px;font-size:0.95rem;line-height:1.5}
+.lock-input{width:100%;padding:14px 18px;background:#0f0f23;border:2px solid #4a4aaa;border-radius:12px;color:#e8e8f0;font-size:1.1rem;text-align:center;letter-spacing:4px;margin-bottom:15px;transition:border-color 0.3s}
+.lock-input:focus{outline:none;border-color:#a78bfa}
+.lock-btn{width:100%;padding:14px;background:linear-gradient(135deg,#7c3aed,#a78bfa);border:none;border-radius:12px;color:#fff;font-size:1.1rem;font-weight:700;cursor:pointer;transition:transform 0.2s}
+.lock-btn:hover{transform:scale(1.02)}
+.lock-error{color:#f87171;font-size:0.9rem;margin-top:10px;display:none}
+.lock-hint{color:#6b7280;font-size:0.8rem;margin-top:20px}
+.app{display:none;min-height:100vh}
+.sidebar{position:fixed;left:0;top:0;width:260px;height:100vh;background:#111130;border-right:1px solid #2a2a5a;overflow-y:auto;z-index:100;padding:20px 0}
+.sidebar-logo{padding:0 20px 20px;border-bottom:1px solid #2a2a5a;margin-bottom:15px}
+.sidebar-logo h2{color:#a78bfa;font-size:1.1rem;font-weight:700}
+.sidebar-logo p{color:#6b7280;font-size:0.75rem;margin-top:3px}
+.progress-bar-wrap{padding:0 20px 15px;border-bottom:1px solid #2a2a5a}
+.progress-label{font-size:0.75rem;color:#9ca3af;margin-bottom:6px;display:flex;justify-content:space-between}
+.progress-bar{height:6px;background:#2a2a5a;border-radius:10px;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,#7c3aed,#a78bfa);border-radius:10px;transition:width 0.5s ease}
+.module-list{padding:10px 0}
+.module-item{padding:10px 20px;cursor:pointer;transition:all 0.2s;border-left:3px solid transparent;display:flex;align-items:center;gap:10px}
+.module-item:hover{background:#1e1e4a;border-left-color:#4a4aaa}
+.module-item.active{background:#1e1e4a;border-left-color:#a78bfa}
+.module-item.completed{color:#10b981}
+.module-item.completed .module-icon{color:#10b981}
+.module-number{font-size:0.7rem;color:#6b7280;min-width:20px}
+.module-name{font-size:0.85rem;font-weight:500}
+.module-icon{font-size:0.9rem}
+.main-content{margin-left:260px;padding:30px;min-height:100vh}
+.content-header{margin-bottom:30px}
+.content-header h1{font-size:1.8rem;font-weight:700;color:#a78bfa;margin-bottom:8px}
+.content-header p{color:#9ca3af}
+.module-content{background:#1a1a3a;border:1px solid #2a2a5a;border-radius:16px;padding:30px;margin-bottom:25px}
+.module-content h2{color:#c4b5fd;margin-bottom:15px;font-size:1.3rem}
+.module-content h3{color:#a78bfa;margin:20px 0 10px;font-size:1.1rem}
+.module-content p{color:#d1d5db;line-height:1.8;margin-bottom:12px}
+.module-content ul{padding-left:20px;margin-bottom:12px}
+.module-content li{color:#d1d5db;line-height:1.8;margin-bottom:6px}
+.highlight-box{background:linear-gradient(135deg,#1e1e4a,#252560);border-left:4px solid #a78bfa;border-radius:8px;padding:18px;margin:15px 0}
+.highlight-box p{color:#c4b5fd;margin:0}
+.exercise-box{background:#0f1f0f;border:1px solid #10b981;border-radius:12px;padding:25px;margin:20px 0}
+.exercise-box h3{color:#10b981;margin-bottom:15px;font-size:1rem}
+.exercise-textarea{width:100%;background:#0a160a;border:1px solid #10b981;border-radius:8px;padding:12px;color:#d1d5db;font-size:0.9rem;resize:vertical;min-height:100px;font-family:inherit}
+.exercise-textarea:focus{outline:none;border-color:#34d399}
+.scale-container{display:flex;gap:8px;margin:10px 0;flex-wrap:wrap}
+.scale-btn{width:44px;height:44px;border-radius:8px;border:2px solid #2a2a5a;background:#0f0f23;color:#9ca3af;cursor:pointer;font-weight:700;transition:all 0.2s;font-size:0.95rem}
+.scale-btn:hover,.scale-btn.selected{border-color:#a78bfa;background:#2a1a5a;color:#e8e8f0}
+.checkbox-item{display:flex;align-items:flex-start;gap:12px;margin-bottom:10px;cursor:pointer}
+.checkbox-item input{width:18px;height:18px;margin-top:2px;cursor:pointer;accent-color:#a78bfa}
+.checkbox-item span{color:#d1d5db;font-size:0.9rem;line-height:1.5}
+.nav-buttons{display:flex;gap:15px;margin-top:25px;justify-content:space-between}
+.btn-prev{padding:12px 25px;background:#2a2a5a;border:none;border-radius:10px;color:#9ca3af;cursor:pointer;font-size:0.95rem;transition:all 0.2s}
+.btn-next{padding:12px 30px;background:linear-gradient(135deg,#7c3aed,#a78bfa);border:none;border-radius:10px;color:#fff;cursor:pointer;font-size:0.95rem;font-weight:700;transition:all 0.2s}
+.btn-prev:hover{background:#353565;color:#e8e8f0}
+.btn-next:hover{transform:scale(1.02)}
+.completion-badge{background:linear-gradient(135deg,#065f46,#10b981);border-radius:12px;padding:20px;text-align:center;margin:20px 0;display:none}
+.completion-badge h3{color:#fff;font-size:1.1rem;margin-bottom:5px}
+.completion-badge p{color:#d1fae5;font-size:0.85rem}
+.dashboard{background:#1a1a3a;border:1px solid #2a2a5a;border-radius:16px;padding:25px}
+.stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:15px;margin-bottom:25px}
+.stat-card{background:#0f0f23;border-radius:12px;padding:18px;text-align:center}
+.stat-number{font-size:2rem;font-weight:700;color:#a78bfa}
+.stat-label{font-size:0.8rem;color:#6b7280;margin-top:4px}
+@media(max-width:768px){.sidebar{transform:translateX(-100%);transition:transform 0.3s}.sidebar.open{transform:translateX(0)}.main-content{margin-left:0}.stats-grid{grid-template-columns:repeat(2,1fr)}.menu-btn{display:block!important}}
+.menu-btn{display:none;position:fixed;top:15px;left:15px;z-index:200;background:#7c3aed;border:none;border-radius:8px;padding:10px 12px;cursor:pointer;color:#fff;font-size:1.2rem}
+.overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:99}
+.tag{display:inline-block;background:#2a1a5a;color:#a78bfa;font-size:0.75rem;padding:3px 10px;border-radius:20px;margin:3px}
+.affirmation-box{background:linear-gradient(135deg,#1a0a3a,#2a1a5a);border:1px solid #7c3aed;border-radius:12px;padding:20px;text-align:center;margin:15px 0}
+.affirmation-text{font-size:1.1rem;color:#c4b5fd;font-style:italic;line-height:1.6}
+</style>
+</head>
+<body>
+<button class="menu-btn" onclick="toggleMenu()">☰</button>
+<div class="overlay" onclick="toggleMenu()"></div>
+
+<!-- Pantalla de Bloqueo -->
+<div class="lock-screen" id="lockScreen">
+<div class="lock-card">
+<div class="lock-logo">🌟</div>
+<h1 class="lock-title">Sana Tu Mundo</h1>
+<p class="lock-sub">Ingresa tu código de acceso para comenzar tu transformación</p>
+<input type="text" class="lock-input" id="accessCode" placeholder="CÓDIGO" maxlength="12">
+<button class="lock-btn" onclick="checkAccess()">Acceder</button>
+<p class="lock-error" id="lockError">Código incorrecto. Por favor verifica tu compra.</p>
+<p class="lock-hint">Este código fue enviado a tu email después de la compra</p>
+</div>
+</div>
+
+<!-- App Principal -->
+<div class="app" id="app">
+<aside class="sidebar" id="sidebar">
+<div class="sidebar-logo">
+<h2>🌟 Sana Tu Mundo</h2>
+<p>Tu viaje de transformación</p>
+</div>
+<div class="progress-bar-wrap">
+<div class="progress-label">
+<span>Progreso Total</span>
+<span id="progressPercent">0%</span>
+</div>
+<div class="progress-bar">
+<div class="progress-fill" id="progressBar"></div>
+</div>
+</div>
+<div class="module-list" id="moduleList"></div>
+</aside>
+
+<main class="main-content">
+<div class="content-header">
+<h1 id="moduleTitle">Panel de Control</h1>
+<p id="moduleDesc">Comienza tu viaje de transformación personal</p>
+</div>
+<div id="moduleContent"></div>
+</main>
+</div>
+<script>
+const VALID_CODES=['STM2024','SANA2024','MUNDO47','TRANSFORM','ACCESS01','ACCESS02','ACCESS03','ACCESS04','ACCESS05','ACCESS06','ACCESS07','ACCESS08','ACCESS09','ACCESS10'];
+const STORAGE_KEY='stm_progress';
+
+let state=JSON.parse(localStorage.getItem(STORAGE_KEY))||{currentModule:0,completed:[],answers:{},scales:{}};
+
+const modules=[
+{id:'dashboard',icon:'🏠',name:'Inicio',desc:'Panel de progreso'},
+{id:'intro',icon:'🌟',name:'Introducción',desc:'El punto de partida'},
+{id:'m1',icon:'🔍',name:'M1: La Raíz del Dolor',desc:'Identificando el origen'},
+{id:'m2',icon:'🧠',name:'M2: Creencias Limitantes',desc:'Desmantelando muros internos'},
+{id:'m3',icon:'💔',name:'M3: Heridas del Pasado',desc:'Sanar para avanzar'},
+{id:'m4',icon:'🙏',name:'M4: El Poder del Perdón',desc:'La llave de tu libertad'},
+{id:'m5',icon:'💪',name:'M5: Renovando tu Mente',desc:'Transformación desde adentro'},
+{id:'m6',icon:'💖',name:'M6: Amor Propio Real',desc:'El fundamento verdadero'},
+{id:'m7',icon:'🔥',name:'M7: Tu Nueva Identidad',desc:'Quién eres ahora'},
+{id:'m8',icon:'🌱',name:'M8: Plan de Vida',desc:'Construyendo tu futuro'},
+{id:'closing',icon:'🏆',name:'Cierre y Celebración',desc:'Tu transformación consolidada'}
+];
+
+function saveState(){localStorage.setItem(STORAGE_KEY,JSON.stringify(state));}
+
+function checkAccess(){
+const code=document.getElementById('accessCode').value.trim().toUpperCase();
+const saved=localStorage.getItem('stm_access');
+if(VALID_CODES.includes(code)||saved===code){
+localStorage.setItem('stm_access',code);
+document.getElementById('lockScreen').style.display='none';
+document.getElementById('app').style.display='block';
+initApp();
+}else{
+document.getElementById('lockError').style.display='block';
+}
+}
+
+function checkSavedAccess(){
+const saved=localStorage.getItem('stm_access');
+if(saved&&VALID_CODES.includes(saved)){
+document.getElementById('lockScreen').style.display='none';
+document.getElementById('app').style.display='block';
+initApp();
+}
+}
+
+function toggleMenu(){
+const s=document.getElementById('sidebar');
+const o=document.querySelector('.overlay');
+s.classList.toggle('open');
+o.style.display=o.style.display==='block'?'none':'block';
+}
+
+function initApp(){
+buildSidebar();
+loadModule(state.currentModule);
+updateProgress();
+}
+
+function buildSidebar(){
+const list=document.getElementById('moduleList');
+list.innerHTML=modules.map((m,i)=>`
+<div class="module-item ${i===state.currentModule?'active':''} ${state.completed.includes(i)?'completed':''}" onclick="loadModule(${i})">
+<span class="module-number">${i===0?'':i}</span>
+<span class="module-icon">${m.icon}</span>
+<span class="module-name">${m.name}</span>
+</div>`).join('');
+}
+
+function loadModule(idx){
+state.currentModule=idx;
+saveState();
+buildSidebar();
+document.getElementById('moduleTitle').textContent=modules[idx].name;
+document.getElementById('moduleDesc').textContent=modules[idx].desc;
+const content=document.getElementById('moduleContent');
+content.innerHTML=getModuleContent(idx);
+window.scrollTo(0,0);
+}
+
+function updateProgress(){
+const pct=Math.round((state.completed.length/modules.length)*100);
+document.getElementById('progressBar').style.width=pct+'%';
+document.getElementById('progressPercent').textContent=pct+'%';
+}
+
+function markComplete(idx){
+if(!state.completed.includes(idx)){
+state.completed.push(idx);
+saveState();
+updateProgress();
+buildSidebar();
+}
+const badge=document.getElementById('completionBadge');
+if(badge){badge.style.display='block';}
+}
+
+function selectScale(group,val){
+document.querySelectorAll(`.scale-btn[data-group="${group}"]`).forEach(b=>{b.classList.remove('selected');});
+document.querySelector(`.scale-btn[data-group="${group}"][data-val="${val}"]`).classList.add('selected');
+state.scales[group]=val;
+saveState();
+}
+
+function saveTextarea(key){
+const el=document.getElementById(key);
+if(el){state.answers[key]=el.value;saveState();}
+}
+
+function navModule(dir){
+const next=state.currentModule+dir;
+if(next>=0&&next<modules.length){
+if(dir>0)markComplete(state.currentModule);
+loadModule(next);
+}
+}
+
+function getModuleContent(idx){
+const m=modules[idx];
+switch(m.id){
+case 'dashboard':return getDashboard();
+case 'intro':return getIntro();
+case 'm1':return getM1();
+case 'm2':return getM2();
+case 'm3':return getM3();
+case 'm4':return getM4();
+case 'm5':return getM5();
+case 'm6':return getM6();
+case 'm7':return getM7();
+case 'm8':return getM8();
+case 'closing':return getClosing();
+default:return '<p>Módulo en construcción...</p>';
+}
+}
+function getDashboard(){
+const done=state.completed.length;
+const pct=Math.round((done/modules.length)*100);
+return `<div class="dashboard">
+<div class="stats-grid">
+<div class="stat-card"><div class="stat-number">${done}</div><div class="stat-label">Módulos Completados</div></div>
+<div class="stat-card"><div class="stat-number">${pct}%</div><div class="stat-label">Progreso Total</div></div>
+<div class="stat-card"><div class="stat-number">${modules.length-done}</div><div class="stat-label">Por Completar</div></div>
+</div>
+<div class="module-content">
+<h2>🌟 Bienvenido a Sana Tu Mundo</h2>
+<p>Este programa interactivo es tu guía personal de transformación. Cada módulo contiene enseñanzas profundas y ejercicios prácticos que te llevarán de donde estás a donde quieres estar.</p>
+<div class="highlight-box"><p>💡 <strong>Tu progreso se guarda automáticamente.</strong> Puedes cerrar el navegador y retomar desde donde dejaste.</p></div>
+<h3>🗓️ Cómo usar este programa</h3>
+<ul>
+<li>Navega por los módulos usando el menú lateral</li>
+<li>Lee el contenido con calma y reflexión</li>
+<li>Completa los ejercicios escritos honéstamente</li>
+<li>Haz clic en <strong>Completar y Continuar</strong> al terminar cada módulo</li>
+</ul>
+<div class="nav-buttons"><button class="btn-next" onclick="navModule(1)">🚀 Comenzar el Programa</button></div>
+</div></div>`;
+}
+
+function getIntro(){
+return `<div class="module-content">
+<h2>🌟 El Comienzo de Tu Transformación</h2>
+<p>Hay una pregunta que muchas personas llevan dentro sin atreverse a responder del todo: <em>¿Por qué, si quiero sentirme bien, sigo sintiéndome mal?</em></p>
+<p>Si llegaste hasta aquí, es porque algo en ti sabe que es tiempo de un cambio real. No un cambio superficial, no otro truco psicológico, sino una transformación verdadera desde las raíces.</p>
+<div class="highlight-box"><p>📜 <strong>Este no es un libro de autoayuda común.</strong> Es una hoja de ruta basada en principios eternos que han transformado vidas reales, incluyendo la mía.</p></div>
+<h3>🎯 ¿Para quién es este programa?</h3>
+<ul>
+<li>Para quien siente que algo “no está bien” por dentro aunque todo “pare bien” por fuera</li>
+<li>Para quien ha intentado cambiar pero sigue cayendo en los mismos patrones</li>
+<li>Para quien carga heridas del pasado que siguen afectando su presente</li>
+<li>Para quien quiere descubrir quién es realmente, más allá del dolor</li>
+</ul>
+<div class="affirmation-box"><p class="affirmation-text">“El primer paso hacia la transformación es reconocer que necesitas transformación.”</p></div>
+<div class="exercise-box">
+<h3>✍️ Ejercicio Inicial: Tu Punto de Partida</h3>
+<p>Describe en tus propias palabras: ¿Qué te trajo a este programa? ¿Qué esperas lograr?</p>
+<textarea class="exercise-textarea" id="intro_q1" placeholder="Escribe aquí con libertad y honestidad..." oninput="saveTextarea('intro_q1')">${state.answers['intro_q1']||''}</textarea>
+</div>
+<div id="completionBadge" class="completion-badge" style="display:none">
+<h3>✅ ¡Módulo Completado!</h3><p>Avanzas hacia tu transformación</p>
+</div>
+<div class="nav-buttons">
+<button class="btn-prev" onclick="navModule(-1)">← Anterior</button>
+<button class="btn-next" onclick="navModule(1)">✔ Completar y Continuar →</button>
+</div></div>`;
+}
+function getM1(){
+return `<div class="module-content">
+<h2>🔍 La Raíz del Dolor</h2>
+<p>Todo dolor emocional tiene una raíz. Rara vez el problema que vemos en la superficie es el problema real. Las emociones negativas recurrentes, las relaciones que siempre salen mal, los patrones de autoboicot, todos apuntan a algo más profundo.</p>
+<h3>🌳 El Árbol Emocional</h3>
+<p>Imagina tu vida emocional como un árbol. Lo que ves son las ramas: las peleas, la ansiedad, la procrastinación, el aislamiento. Pero debajo está el tronco (tus creencias), y aún más abajo están las raíces (tus experiencias formativas).</p>
+<div class="highlight-box"><p>💡 <strong>Principio clave:</strong> No puedes resolver un problema de raíz cortando las ramas. Necesitas llegar a la raíz.</p></div>
+<h3>🔎 Las fuentes comunes del dolor interno</h3>
+<ul>
+<li>Rechazo o abandono en la infancia (real o percibido)</li>
+<li>Palabras que te dijeron y te creiste</li>
+<li>Eventos traumáticos no procesados</li>
+<li>Modelos de amor distorsionados que normalizaste</li>
+<li>Ausencia de figura de autoridad sana</li>
+</ul>
+<div class="exercise-box">
+<h3>✍️ Ejercicio: Mapeando tu Dolor</h3>
+<p><strong>1. Identifica tu patrón más recurrente</strong> (ej: “always me abandona”, “nunca soy suficiente”, “no puedo confiar en nadie”):</p>
+<textarea class="exercise-textarea" id="m1_q1" placeholder="Mi patrón más recurrente es..." oninput="saveTextarea('m1_q1')">${state.answers['m1_q1']||''}</textarea>
+<p style="margin-top:15px"><strong>2. ¿Cuándo recuerdas haber sentido esto por primera vez?</strong></p>
+<textarea class="exercise-textarea" id="m1_q2" placeholder="La primera vez que recuerdo haber sentido esto fue..." oninput="saveTextarea('m1_q2')">${state.answers['m1_q2']||''}</textarea>
+<p style="margin-top:15px"><strong>3. En una escala del 1 al 10, ¿cuánto dolor te genera este patrón hoy?</strong></p>
+<div class="scale-container">${[1,2,3,4,5,6,7,8,9,10].map(n=>`<button class="scale-btn ${state.scales['m1_pain']==n?'selected':''}" data-group="m1_pain" data-val="${n}" onclick="selectScale('m1_pain',${n})">${n}</button>`).join('')}</div>
+</div>
+<div class="affirmation-box"><p class="affirmation-text">“Reconocer el dolor no es debilidad. Es el primer acto de coraje hacia tu curación.”</p></div>
+<div id="completionBadge" class="completion-badge" style="display:none"><h3>✅ ¡Módulo Completado!</h3><p>Has dado el primer paso: el reconocimiento.</p></div>
+<div class="nav-buttons">
+<button class="btn-prev" onclick="navModule(-1)">← Anterior</button>
+<button class="btn-next" onclick="navModule(1)">✔ Completar y Continuar →</button>
+</div></div>`;
+}
+
+function getM2(){
+return `<div class="module-content">
+<h2>🧠 Creencias Limitantes: Los Muros Invisibles</h2>
+<p>Una creencia limitante es una conviccion que tienes sobre ti mismo, los demás o la vida, que te impide crecer, avanzar o recibir lo bueno. Lo más peligroso: la mayoria son inconscientes.</p>
+<h3>💡 ¿Cómo se forman las creencias?</h3>
+<p>Las creencias se forman en los primeros años de vida, principalmente antes de los 7 años, cuando tu mente está en modo “esponja”. Absorbes todo lo que te dicen, lo que ves, y cómo te tratan, y lo conviertes en verdad absoluta.</p>
+<div class="highlight-box"><p>🔑 <strong>Ejemplo clásico:</strong> Un niño que llora y le dicen “los hombres no lloran” aprende que sus emociones no son válidas. De adulto, reprime todo y no sabe por qué explota.</p></div>
+<h3>🚫 Creencias limitantes comunes</h3>
+<ul>
+<li>“No soy suficientemente bueno/a”</li>
+<li>“El amor duele” o “el amor hay que ganarlo”</li>
+<li>“No merezco cosas buenas”</li>
+<li>“Si muestro quién soy, me van a rechazar”</li>
+<li>“El éxito es para otros, no para mí”</li>
+<li>“Tengo que ser perfecto para ser amado”</li>
+</ul>
+<div class="exercise-box">
+<h3>✍️ Ejercicio: Cazando tus Creencias</h3>
+<p><strong>Completa estas frases sin pensar demasiado:</strong></p>
+<p>Yo soy alguien que...</p>
+<textarea class="exercise-textarea" id="m2_q1" placeholder="Yo soy alguien que..." oninput="saveTextarea('m2_q1')" style="min-height:60px">${state.answers['m2_q1']||''}</textarea>
+<p style="margin-top:12px">El amor es...</p>
+<textarea class="exercise-textarea" id="m2_q2" placeholder="El amor es..." oninput="saveTextarea('m2_q2')" style="min-height:60px">${state.answers['m2_q2']||''}</textarea>
+<p style="margin-top:12px">Yo no merezco...</p>
+<textarea class="exercise-textarea" id="m2_q3" placeholder="Yo no merezco..." oninput="saveTextarea('m2_q3')" style="min-height:60px">${state.answers['m2_q3']||''}</textarea>
+<p style="margin-top:15px"><strong>Ahora elige la creencia más poderosa que identificaste y escribe de dónde crees que viene:</strong></p>
+<textarea class="exercise-textarea" id="m2_q4" placeholder="Esta creencia viene de..." oninput="saveTextarea('m2_q4')">${state.answers['m2_q4']||''}</textarea>
+</div>
+<div class="affirmation-box"><p class="affirmation-text">“Una creencia que ya no te sirve no es verdad; es solo un hábito mental que puedes cambiar.”</p></div>
+<div id="completionBadge" class="completion-badge" style="display:none"><h3>✅ ¡Módulo Completado!</h3><p>Ya identificaste los muros. Ahora empezaremos a derribarlos.</p></div>
+<div class="nav-buttons">
+<button class="btn-prev" onclick="navModule(-1)">← Anterior</button>
+<button class="btn-next" onclick="navModule(1)">✔ Completar y Continuar →</button>
+</div></div>`;
+}
+function getM3(){
+return `<div class="module-content">
+<h2>💔 Heridas del Pasado: Sanar para Avanzar</h2>
+<p>Una herida emocional no sanada es como una fractura mal curada: puede parecer que ya pasó, pero al menor peso vuelve a doler. El pasado no cambia, pero tu relación con él sí puede cambiar.</p>
+<h3>🗣️ Los tipos de heridas más comunes</h3>
+<ul>
+<li><strong>Herida de Abandono:</strong> “Siempre me dejan” - genera miedo a la soledad y dependencia emocional</li>
+<li><strong>Herida de Rechazo:</strong> “No soy suficiente” - genera perfeccionismo y miedo al fracaso</li>
+<li><strong>Herida de Humillación:</strong> “Soy una verguenza” - genera autoboicot y autosabotaje</li>
+<li><strong>Herida de Traición:</strong> “Nadie es de confianza” - genera control excesivo y celos</li>
+<li><strong>Herida de Injusticia:</strong> “No es justo” - genera rigidez y perfeccionismo extremo</li>
+</ul>
+<div class="highlight-box"><p>💡 Las heridas no son tu culpa. Pero sanarlas sí es tu responsabilidad.</p></div>
+<div class="exercise-box">
+<h3>✍️ Ejercicio: Reconociendo Tu Herida Principal</h3>
+<p>Con base en la lista anterior, ¿con cuál herida te identificas más? Descríbela:</p>
+<textarea class="exercise-textarea" id="m3_q1" placeholder="Mi herida principal es..." oninput="saveTextarea('m3_q1')">${state.answers['m3_q1']||''}</textarea>
+<p style="margin-top:15px">¿Cómo se manifiesta esta herida en tu vida hoy (relaciones, trabajo, contigo mismo)?</p>
+<textarea class="exercise-textarea" id="m3_q2" placeholder="En mi vida esta herida aparece cuando..." oninput="saveTextarea('m3_q2')">${state.answers['m3_q2']||''}</textarea>
+<p style="margin-top:15px">¿Qué necesitabas que no recibiste en ese momento del pasado?</p>
+<textarea class="exercise-textarea" id="m3_q3" placeholder="Lo que necesitaba era..." oninput="saveTextarea('m3_q3')">${state.answers['m3_q3']||''}</textarea>
+</div>
+<div class="affirmation-box"><p class="affirmation-text">“Lo que no se transforma, se transfiere. Sana hoy lo que no quieres seguir pasando.”</p></div>
+<div id="completionBadge" class="completion-badge" style="display:none"><h3>✅ ¡Módulo Completado!</h3><p>Nombraste la herida. Eso ya es curación.</p></div>
+<div class="nav-buttons">
+<button class="btn-prev" onclick="navModule(-1)">← Anterior</button>
+<button class="btn-next" onclick="navModule(1)">✔ Completar y Continuar →</button>
+</div></div>`;
+}
+
+function getM4(){
+return `<div class="module-content">
+<h2>🙏 El Poder del Perdón: La Llave de Tu Libertad</h2>
+<p>El perdón es probablemente el tema más malentendido de todo el proceso de sanación. La mayoría cree que perdonar es decirle a quien te dañó que “está bien”. Eso no es perdón. Eso es disculpa.</p>
+<div class="highlight-box"><p>🔑 <strong>La verdad sobre el perdón:</strong> Perdonar NO es justificar lo que hicieron. Es liberar la cadena que los une a ti dentro de tu corazón. El perdón no es para ellos. Es para ti.</p></div>
+<h3>🚧 Lo que el NO perdón hace en ti</h3>
+<ul>
+<li>Mantiene viva la herida con cada recuerdo</li>
+<li>Consume tu energía emocional</li>
+<li>Te mantiene en el pasado, incapaz de vivir el presente</li>
+<li>Afecta tu salud física (el resentimiento se almacena en el cuerpo)</li>
+<li>Te impide recibir amor nuevo porque el corazón está ocupado</li>
+</ul>
+<h3>🙏 El proceso de perdonar de verdad</h3>
+<ol style="padding-left:20px;color:#d1d5db;line-height:2">
+<li>Reconoce el daño (no lo minimices ni lo exageres)</li>
+<li>Siente la emoción que genera (enojo, tristeza, miedo)</li>
+<li>Decide perdonar como un acto de voluntad, no de sentimiento</li>
+<li>Repite el proceso cada vez que vuelva el recuerdo</li>
+<li>Recuerda: perdonar no significa volver a exponerte al daño</li>
+</ol>
+<div class="exercise-box">
+<h3>✍️ Ejercicio: Carta de Perdón (sin enviar)</h3>
+<p>Escribe una carta a quien necesitas perdonar. Comienza con: <em>"Te perdono por..."</em> - No la envíes. Es tuya.</p>
+<textarea class="exercise-textarea" id="m4_q1" placeholder="Querido/a ..., Te perdono por..." oninput="saveTextarea('m4_q1')" style="min-height:150px">${state.answers['m4_q1']||''}</textarea>
+<p style="margin-top:15px"><strong>También perdónate a ti mismo/a. Escribe: “Me perdono a mí por...”</strong></p>
+<textarea class="exercise-textarea" id="m4_q2" placeholder="Me perdono a mí por..." oninput="saveTextarea('m4_q2')">${state.answers['m4_q2']||''}</textarea>
+</div>
+<div class="affirmation-box"><p class="affirmation-text">“Perdonar es el acto más valiente de amor propio que existe.”</p></div>
+<div id="completionBadge" class="completion-badge" style="display:none"><h3>✅ ¡Módulo Completado!</h3><p>La llave está en tu mano. ÚSALA.</p></div>
+<div class="nav-buttons">
+<button class="btn-prev" onclick="navModule(-1)">← Anterior</button>
+<button class="btn-next" onclick="navModule(1)">✔ Completar y Continuar →</button>
+</div></div>`;
+}
+function getM5(){
+return `<div class="module-content">
+<h2>💪 Renovando tu Mente: Transformación desde Adentro</h2>
+<p>Toda transformación verdadera comienza en la mente. No en el comportamiento, no en las circunstancias externas, sino en los patrones de pensamiento que gobiernan tu vida sin que te des cuenta.</p>
+<div class="highlight-box"><p>💡 <strong>Principio poderoso:</strong> No ves el mundo como él es. Lo ves como tú eres. Cambia tus pensamientos y cambiará lo que ves y lo que atraes.</p></div>
+<h3>🔄 Cómo funciona la renovación mental</h3>
+<p>La ciencia lo llama neuroplasticidad: el cerebro puede formar nuevas conexiones y cambiar sus patrones establecidos. Lo que piensas repetidamente se convierte en ruta neural. Puedes crear nuevas rutas.</p>
+<h3>🧰 Las 3 herramientas para renovar tu mente</h3>
+<ul>
+<li><strong>1. Conciencia:</strong> Nota tus pensamientos sin identificarte con ellos</li>
+<li><strong>2. Cuestionamiento:</strong> Pregunta: ¿Esto que pienso es real o es mi historia?</li>
+<li><strong>3. Reencuadre:</strong> Encuentra una perspectiva nueva y verdadera que te libere</li>
+</ul>
+<div class="exercise-box">
+<h3>✍️ Ejercicio: El Reencuadre Poderoso</h3>
+<p><strong>Pensamiento limitante que repito más:</strong></p>
+<textarea class="exercise-textarea" id="m5_q1" placeholder="El pensamiento que más se repite en mi mente es..." oninput="saveTextarea('m5_q1')" style="min-height:60px">${state.answers['m5_q1']||''}</textarea>
+<p style="margin-top:12px"><strong>¿Este pensamiento es 100% verdadero? ¿Qué evidencia tengo en contra?</strong></p>
+<textarea class="exercise-textarea" id="m5_q2" placeholder="La evidencia de que este pensamiento no es completamente verdadero..." oninput="saveTextarea('m5_q2')">${state.answers['m5_q2']||''}</textarea>
+<p style="margin-top:12px"><strong>Nuevo pensamiento empoderador para reemplazarlo:</strong></p>
+<textarea class="exercise-textarea" id="m5_q3" placeholder="Un pensamiento más verdadero y empoderador sería..." oninput="saveTextarea('m5_q3')" style="min-height:60px">${state.answers['m5_q3']||''}</textarea>
+</div>
+<div class="affirmation-box"><p class="affirmation-text">“No eres tus pensamientos. Eres quien observa los pensamientos y elige cuáles alimentar.”</p></div>
+<div id="completionBadge" class="completion-badge" style="display:none"><h3>✅ ¡Módulo Completado!</h3><p>Tu mente está listándose para la renovación.</p></div>
+<div class="nav-buttons">
+<button class="btn-prev" onclick="navModule(-1)">← Anterior</button>
+<button class="btn-next" onclick="navModule(1)">✔ Completar y Continuar →</button>
+</div></div>`;
+}
+
+function getM6(){
+return `<div class="module-content">
+<h2>💖 Amor Propio Real: El Fundamento Verdadero</h2>
+<p>El amor propio no es bañarte en lujos o decirte frases bonitas en el espejo. Es un compromiso profundo contigo mismo: tratarte con la misma compasión que tratarías a alguien que amas profundamente.</p>
+<div class="highlight-box"><p>💡 <strong>Verdad incomploda:</strong> No puedes dar lo que no tienes. Si no te amas a ti mismo, el amor que das a otros siempre tendrá una trampa: busca validación, busca ser correspondido, busca llenar un vacío.</p></div>
+<h3>😊 Los pilares del amor propio real</h3>
+<ul>
+<li><strong>Autoconocimiento:</strong> Saber quién eres, qué sientes, qué necesitas</li>
+<li><strong>Límites sanos:</strong> Decir no cuando es necesario sin culpa excesiva</li>
+<li><strong>Autocuidado genuino:</strong> Cuidar tu cuerpo, mente y espíritu</li>
+<li><strong>Autocompasión:</strong> Tratarte bien cuando cometes errores</li>
+<li><strong>Autenticidad:</strong> Ser tú mismo aunque no guste a todos</li>
+</ul>
+<div class="exercise-box">
+<h3>✍️ Ejercicio: El Inventario de Amor Propio</h3>
+<p><strong>En una escala del 1-10, ¿cómo estás en cada pilar?</strong></p>
+<p style="margin-top:10px">Autoconocimiento:</p>
+<div class="scale-container">${[1,2,3,4,5,6,7,8,9,10].map(n=>`<button class="scale-btn ${state.scales['m6_s1']==n?'selected':''}" data-group="m6_s1" data-val="${n}" onclick="selectScale('m6_s1',${n})">${n}</button>`).join('')}</div>
+<p style="margin-top:10px">Límites sanos:</p>
+<div class="scale-container">${[1,2,3,4,5,6,7,8,9,10].map(n=>`<button class="scale-btn ${state.scales['m6_s2']==n?'selected':''}" data-group="m6_s2" data-val="${n}" onclick="selectScale('m6_s2',${n})">${n}</button>`).join('')}</div>
+<p style="margin-top:10px">Autocuidado genuino:</p>
+<div class="scale-container">${[1,2,3,4,5,6,7,8,9,10].map(n=>`<button class="scale-btn ${state.scales['m6_s3']==n?'selected':''}" data-group="m6_s3" data-val="${n}" onclick="selectScale('m6_s3',${n})">${n}</button>`).join('')}</div>
+<p style="margin-top:15px"><strong>¿En qué pilar tienes más trabajo pendiente y por qué?</strong></p>
+<textarea class="exercise-textarea" id="m6_q1" placeholder="El pilar donde más necesito trabajar es..." oninput="saveTextarea('m6_q1')">${state.answers['m6_q1']||''}</textarea>
+<p style="margin-top:12px"><strong>Un compromiso específico que hoy hago contigo mismo/a:</strong></p>
+<textarea class="exercise-textarea" id="m6_q2" placeholder="Me comprometo a..." oninput="saveTextarea('m6_q2')" style="min-height:60px">${state.answers['m6_q2']||''}</textarea>
+</div>
+<div class="affirmation-box"><p class="affirmation-text">“Merezco amor, no porque lo gane, sino porque existo.”</p></div>
+<div id="completionBadge" class="completion-badge" style="display:none"><h3>✅ ¡Módulo Completado!</h3><p>El amor propio es un práctica diaria que ya has comenzado.</p></div>
+<div class="nav-buttons">
+<button class="btn-prev" onclick="navModule(-1)">← Anterior</button>
+<button class="btn-next" onclick="navModule(1)">✔ Completar y Continuar →</button>
+</div></div>`;
+}
+function getM7(){
+return `<div class="module-content">
+<h2>🔥 Tu Nueva Identidad: Quién Eres Ahora</h2>
+<p>Después de reconocer el dolor, identificar las creencias, sanar las heridas, perdonar y renovar la mente... llega el momento más transformador: <strong>decidir quién vas a ser.</strong></p>
+<div class="highlight-box"><p>💡 Tu identidad no es lo que te pasaron. Es lo que decides ser a partir de todo lo que has vivido. Puedes reescribir tu historia sin borrar el pasado.</p></div>
+<h3>🔗 La identidad como ancla</h3>
+<p>Cuando dices “Yo soy...” defines lo que el cerebro busca confirmar. Si dices “Yo soy alguien que fracasa siempre”, tu cerebro busca prueba de eso. Si cambias a “Yo soy alguien que aprende y crece”, busca evidencia de eso.</p>
+<h3>📝 Creando tu nueva declaración de identidad</h3>
+<p>Una declaración de identidad poderosa tiene 3 componentes:</p>
+<ul>
+<li>Quién ERES (no quién quieres ser)</li>
+<li>Qué valoras profundamente</li>
+<li>Cómo tratas a las personas (incluido tú mismo)</li>
+</ul>
+<div class="exercise-box">
+<h3>✍️ Ejercicio: Escribiendo Tu Nueva Identidad</h3>
+<p><strong>Completa este manifiesto personal:</strong></p>
+<p>Yo soy...</p>
+<textarea class="exercise-textarea" id="m7_q1" placeholder="Yo soy (quién eres ahora)..." oninput="saveTextarea('m7_q1')" style="min-height:60px">${state.answers['m7_q1']||''}</textarea>
+<p style="margin-top:12px">Yo valoro profundamente...</p>
+<textarea class="exercise-textarea" id="m7_q2" placeholder="Los valores que me definen son..." oninput="saveTextarea('m7_q2')" style="min-height:60px">${state.answers['m7_q2']||''}</textarea>
+<p style="margin-top:12px">Yo me trato a mí mismo/a con...</p>
+<textarea class="exercise-textarea" id="m7_q3" placeholder="Yo me trato con..." oninput="saveTextarea('m7_q3')" style="min-height:60px">${state.answers['m7_q3']||''}</textarea>
+<p style="margin-top:12px"><strong>Ahora únelo todo en una declaración de 2-3 oraciones:</strong></p>
+<textarea class="exercise-textarea" id="m7_q4" placeholder="Mi declaración de identidad es..." oninput="saveTextarea('m7_q4')" style="min-height:100px">${state.answers['m7_q4']||''}</textarea>
+</div>
+<div class="affirmation-box"><p class="affirmation-text">“No te convertiste en quien eres por accidente. Y no te convertirás en quien quieres ser por accidente tampoco. Es una decisión.”</p></div>
+<div id="completionBadge" class="completion-badge" style="display:none"><h3>✅ ¡Módulo Completado!</h3><p>Tu nueva identidad está tomando forma. ¡Bríllala!</p></div>
+<div class="nav-buttons">
+<button class="btn-prev" onclick="navModule(-1)">← Anterior</button>
+<button class="btn-next" onclick="navModule(1)">✔ Completar y Continuar →</button>
+</div></div>`;
+}
+
+function getM8(){
+return `<div class="module-content">
+<h2>🌱 Tu Plan de Vida: Construyendo Tu Futuro</h2>
+<p>Una transformación interna sin un plan externo es solo inspiración temporal. Este módulo te ayuda a traducir todo lo que has trabajado en un plan concreto para tu vida.</p>
+<div class="highlight-box"><p>💡 <strong>La visión sin acción es solo un sueño. La acción sin visión es solo actividad. La visión con acción cambia el mundo.</strong></p></div>
+<h3>🎯 Las 5 áreas de tu vida</h3>
+<ul>
+<li><strong>Emocional/Espiritual:</strong> Tu paz interior y conexión con algo mayor</li>
+<li><strong>Relaciones:</strong> Cómo te vinculas con otros</li>
+<li><strong>Salud:</strong> Tu cuerpo y bienestar físico</li>
+<li><strong>Propósito/Carrera:</strong> Tu contribución al mundo</li>
+<li><strong>Finanzas:</strong> Tu relación con el dinero y la abundancia</li>
+</ul>
+<div class="exercise-box">
+<h3>✍️ Ejercicio: Mi Plan de Vida</h3>
+<p><strong>Para cada área, escribe: ¿Dónde estás hoy? ¿Dónde quieres estar en 1 año?</strong></p>
+<p style="margin-top:10px">❤️ Emocional/Espiritual:</p>
+<textarea class="exercise-textarea" id="m8_q1" placeholder="Hoy estoy... En 1 año quiero..." oninput="saveTextarea('m8_q1')">${state.answers['m8_q1']||''}</textarea>
+<p style="margin-top:10px">🤝 Relaciones:</p>
+<textarea class="exercise-textarea" id="m8_q2" placeholder="Hoy estoy... En 1 año quiero..." oninput="saveTextarea('m8_q2')">${state.answers['m8_q2']||''}</textarea>
+<p style="margin-top:10px">💪 Salud:</p>
+<textarea class="exercise-textarea" id="m8_q3" placeholder="Hoy estoy... En 1 año quiero..." oninput="saveTextarea('m8_q3')">${state.answers['m8_q3']||''}</textarea>
+<p style="margin-top:10px">🚀 Propósito/Carrera:</p>
+<textarea class="exercise-textarea" id="m8_q4" placeholder="Hoy estoy... En 1 año quiero..." oninput="saveTextarea('m8_q4')">${state.answers['m8_q4']||''}</textarea>
+<p style="margin-top:10px">💰 Finanzas:</p>
+<textarea class="exercise-textarea" id="m8_q5" placeholder="Hoy estoy... En 1 año quiero..." oninput="saveTextarea('m8_q5')">${state.answers['m8_q5']||''}</textarea>
+<p style="margin-top:15px"><strong>¿Cuál es el UNO próximo paso que puedes tomar esta semana?</strong></p>
+<textarea class="exercise-textarea" id="m8_q6" placeholder="Esta semana voy a dar el siguiente paso..." oninput="saveTextarea('m8_q6')" style="min-height:60px">${state.answers['m8_q6']||''}</textarea>
+</div>
+<div class="affirmation-box"><p class="affirmation-text">“El mejor momento para plantar un árbol fue hace 20 años. El segundo mejor momento es hoy.”</p></div>
+<div id="completionBadge" class="completion-badge" style="display:none"><h3>✅ ¡Módulo Completado!</h3><p>Tu plan está escrito. Ahora viene la acción.</p></div>
+<div class="nav-buttons">
+<button class="btn-prev" onclick="navModule(-1)">← Anterior</button>
+<button class="btn-next" onclick="navModule(1)">🏆 Ir al Cierre</button>
+</div></div>`;
+}
+
+function getClosing(){
+return `<div class="module-content">
+<h2>🏆 ¡Felicitaciones! Has Completado Sana Tu Mundo</h2>
+<p>Llegaste hasta aquí. Y eso, por sí solo, ya dice muchísimo de ti. No todos tienen el coraje de mirar hacia adentro, enfrentar sus sombras y decidir cambiar.</p>
+<div class="highlight-box"><p>🌟 Has recorrido un camino extraordinario en este programa. Reconociste tus raíces, identificaste tus creencias, miraste de frente tus heridas, elegiste perdonar, renovaste tu mente, definiste tu amor propio, declaraste tu nueva identidad y diseaste tu plan.</p></div>
+<h3>📌 Lo que llevas contigo</h3>
+<ul>
+<li>Un mapa claro de tus patrones emocionales</li>
+<li>Herramientas prácticas para seguir sanando</li>
+<li>Una nueva declaración de identidad</li>
+<li>Un plan de vida concreto</li>
+<li>La confirmación de que eres capaz de transformarte</li>
+</ul>
+<div class="affirmation-box"><p class="affirmation-text">“Este no es el final del camino. Es el principio de quien tú realmente eres.”</p></div>
+<h3>🔄 Recuerda</h3>
+<p>La transformación no es un evento, es un proceso. Habrá días donde sientas que retrocedes. Eso es parte. Vuelve a este programa, relee tus respuestas, y confía en el proceso.</p>
+<div class="exercise-box">
+<h3>✍️ Ejercicio Final: Carta a Tu Yo Futuro</h3>
+<p>Escribe una carta a la persona que serás en 1 año, después de haber vivido esta transformación:</p>
+<textarea class="exercise-textarea" id="closing_q1" placeholder="Querido yo del futuro..." oninput="saveTextarea('closing_q1')" style="min-height:200px">${state.answers['closing_q1']||''}</textarea>
+</div>
+<div id="completionBadge" class="completion-badge" style="display:none"><h3>🎉 ¡PROGRAMA COMPLETADO!</h3><p>Eres oficialmente alguien que hizo el trabajo. ¡Celebra!</p></div>
+<div class="nav-buttons">
+<button class="btn-prev" onclick="navModule(-1)">← Anterior</button>
+<button class="btn-next" onclick="markComplete(10);document.getElementById('completionBadge').style.display='block'">🎉 Completar Programa</button>
+</div></div>`;
+}
+
+document.addEventListener('keydown',function(e){
+if(e.key==='Enter'&&document.getElementById('lockScreen').style.display!=='none'){
+checkAccess();
+}
+});
+
+checkSavedAccess();
+</script>
+</body>
+</html>
