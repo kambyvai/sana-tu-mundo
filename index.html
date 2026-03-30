@@ -1,960 +1,1517 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Sana Tu Mundo Interior - Proceso Interactivo</title>
-    <style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'Segoe UI',Tahoma,sans-serif;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);min-height:100vh;display:flex;align-items:center;justify-content:center}
-.container{max-width:900px;width:95%;background:white;border-radius:20px;box-shadow:0 20px 60px rgba(0,0,0,0.3);overflow:hidden}
-.login-screen{padding:60px 40px;text-align:center}
-.login-screen h1{color:#667eea;font-size:2.5rem;margin-bottom:20px}
-.login-screen p{color:#555;margin-bottom:30px;font-size:1.1rem}
-.login-screen input{width:100%;max-width:300px;padding:15px;border:2px solid #ddd;border-radius:10px;font-size:1.1rem;margin-bottom:20px}
-.login-screen button{background:linear-gradient(135deg,#667eea,#764ba2);color:white;border:none;padding:15px 50px;border-radius:10px;font-size:1.2rem;cursor:pointer;transition:transform 0.2s}
-.login-screen button:hover{transform:scale(1.05)}
-.app-container{display:none}
-.header{background:linear-gradient(135deg,#667eea,#764ba2);color:white;padding:20px 30px;text-align:center}
-.header h1{font-size:1.8rem}
-.main-content{display:flex;min-height:calc(100vh - 140px)}
-.sidebar{width:280px;background:#f8f9fa;padding:25px 15px;overflow-y:auto;border-right:2px solid #e0e0e0}
-.module-item{padding:12px 15px;margin:8px 0;background:white;border-radius:8px;cursor:pointer;transition:all 0.3s;border-left:4px solid transparent;font-size:0.95rem}
-.module-item:hover{background:#e8eaf6;border-left-color:#667eea}
-.module-item.completed{background:#e8f5e9;border-left-color:#4caf50}
-.module-item.completed::after{content:' ✓';color:#4caf50;font-weight:bold}
-.module-item.active{background:#667eea;color:white;border-left-color:#764ba2}
-.content-area{flex:1;padding:40px;overflow-y:auto;max-height:calc(100vh - 140px)}
-.module-content{display:none}
-.module-content.active{display:block;animation:fadeIn 0.5s}
-@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
-.module-content h2{color:#667eea;font-size:2rem;margin-bottom:20px;border-bottom:3px solid #764ba2;padding-bottom:10px}
-.module-content h3{color:#764ba2;font-size:1.5rem;margin:25px 0 15px;font-weight:600}
-.module-content p{color:#333;line-height:1.8;margin-bottom:15px;font-size:1.05rem}
-.module-content ul,.module-content ol{margin-left:25px;margin-bottom:15px;color:#333;line-height:1.8}
-.module-content li{margin-bottom:10px}
-.exercise-box{background:#f0f4ff;padding:25px;border-radius:12px;margin:25px 0;border-left:5px solid #667eea}
-.exercise-box h4{color:#667eea;margin-bottom:15px;font-size:1.2rem;display:flex;align-items:center;gap:8px}
-.exercise-box textarea{width:100%;min-height:120px;padding:15px;border:2px solid #ddd;border-radius:8px;font-size:1rem;font-family:inherit;resize:vertical;margin-top:10px}
-.exercise-box textarea:focus{outline:none;border-color:#667eea}
-.exercise-hint{background:#fff3cd;padding:15px;border-radius:8px;margin-top:15px;border-left:4px solid:#856404;font-size:0.95rem;color:#856404}
-.story-box{background:#f3e5f5;padding:25px;border-radius:12px;margin:25px 0;border-left:5px solid #9c27b0}
-.story-box h4{color:#9c27b0;margin-bottom:15px;font-size:1.2rem}
-.reflection-box{background:#e8f5e9;padding:20px;border-radius:12px;margin:20px 0;border-left:5px solid #4caf50}
-.reflection-box h4{color:#2e7d32;margin-bottom:10px}
-.nav-buttons{display:flex;justify-content:space-between;margin-top:35px;padding-top:25px;border-top:2px solid #e0e0e0}
-.nav-buttons button{padding:12px 30px;border:none;border-radius:10px;font-size:1.05rem;cursor:pointer;transition:all 0.3s}
-.btn-prev{background:#e0e0e0;color:#555}
-.btn-prev:hover{background:#bdbdbd}
-.btn-next{background:linear-gradient(135deg,#667eea,#764ba2);color:white}
-.btn-next:hover{transform:translateY(-2px);box-shadow:0 5px 15px rgba(102,126,234,0.4)}
-.btn-next:disabled{background:#ccc;cursor:not-allowed;transform:none}
-.completion-badge{background:#4caf50;color:white;padding:15px 25px;border-radius:10px;text-align:center;margin:20px 0;font-size:1.1rem;font-weight:600}
-.quote-box{background:#fff9c4;padding:20px;border-radius:10px;margin:20px 0;border-left:5px solid #fbc02d;font-style:italic;color:#555}
-.small-exercise{background:#f5f5f5;padding:15px;border-radius:8px;margin:15px 0;border-left:3px solid #667eea}
-.small-exercise input[type="text"]{width:100%;padding:10px;border:2px solid #ddd;border-radius:6px;margin-top:8px;font-size:1rem}
-.small-exercise input[type="text"]:focus{outline:none;border-color:#667eea}
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sana Tu Mundo Interior</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ─── Variables ─────────────────────────────────────────────── */
+:root {
+  --rose:     #D93F7A;
+  --rose-dk:  #A82E5C;
+  --rose-lt:  #F2C4D8;
+  --rose-bg:  #FDF0F5;
+  --cream:    #FBF7F4;
+  --ink:      #1C1018;
+  --ink-2:    #4A3040;
+  --ink-3:    #7A5868;
+  --border:   #E8D5DF;
+  --white:    #FFFFFF;
+  --green:    #4CAF7A;
+  --amber:    #E8A040;
+  --sidebar-w: 270px;
+  --header-h:  68px;
+  --radius:    12px;
+  --shadow:    0 2px 20px rgba(217,63,122,.12);
+  --shadow-lg: 0 8px 40px rgba(217,63,122,.18);
+}
+
+/* ─── Reset ─────────────────────────────────────────────────── */
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+html { font-size:16px; }
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--cream);
+  color: var(--ink);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ─── Login ─────────────────────────────────────────────────── */
+#loginScreen {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--cream);
+  padding: 2rem;
+  position: relative;
+  overflow: hidden;
+}
+#loginScreen::before {
+  content: '';
+  position: absolute;
+  top: -30%; right: -20%;
+  width: 600px; height: 600px;
+  background: radial-gradient(circle, var(--rose-lt) 0%, transparent 65%);
+  opacity: .45;
+  pointer-events: none;
+}
+#loginScreen::after {
+  content: '';
+  position: absolute;
+  bottom: -20%; left: -15%;
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, #F5D0E8 0%, transparent 65%);
+  opacity: .35;
+  pointer-events: none;
+}
+.login-card {
+  background: var(--white);
+  border-radius: 24px;
+  box-shadow: var(--shadow-lg);
+  padding: 3.5rem 3rem;
+  max-width: 440px;
+  width: 100%;
+  text-align: center;
+  position: relative;
+  z-index: 1;
+  animation: cardIn .6s cubic-bezier(.16,1,.3,1);
+}
+@keyframes cardIn {
+  from { opacity:0; transform: translateY(24px) scale(.97); }
+  to   { opacity:1; transform: translateY(0) scale(1); }
+}
+.login-flower {
+  font-size: 2.6rem;
+  margin-bottom: 1.2rem;
+  display: block;
+  animation: spinIn .8s cubic-bezier(.16,1,.3,1) .1s both;
+}
+@keyframes spinIn {
+  from { transform: rotate(-20deg) scale(.6); opacity:0; }
+  to   { transform: rotate(0deg) scale(1); opacity:1; }
+}
+.login-card h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: 2rem;
+  font-weight: 900;
+  color: var(--rose-dk);
+  line-height: 1.15;
+  margin-bottom: .5rem;
+}
+.login-card p {
+  color: var(--ink-3);
+  font-size: .95rem;
+  font-weight: 300;
+  margin-bottom: 2rem;
+  line-height: 1.6;
+}
+.login-divider {
+  width: 40px; height: 2px;
+  background: var(--rose);
+  margin: 1rem auto 1.8rem;
+  border-radius: 2px;
+}
+.login-card input {
+  width: 100%;
+  padding: .85rem 1.1rem;
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 1rem;
+  color: var(--ink);
+  background: var(--cream);
+  outline: none;
+  transition: border-color .2s, box-shadow .2s;
+  margin-bottom: 1rem;
+}
+.login-card input:focus {
+  border-color: var(--rose);
+  box-shadow: 0 0 0 3px var(--rose-lt);
+}
+.login-card input::placeholder { color: var(--ink-3); }
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+  background: var(--rose);
+  color: var(--white);
+  border: none;
+  border-radius: var(--radius);
+  padding: .9rem 2rem;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  width: 100%;
+  justify-content: center;
+  transition: background .2s, transform .15s, box-shadow .2s;
+  box-shadow: 0 4px 16px rgba(217,63,122,.35);
+}
+.btn-primary:hover {
+  background: var(--rose-dk);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(217,63,122,.45);
+}
+.btn-primary:active { transform: translateY(0); }
+.login-error {
+  color: #c0392b;
+  font-size: .85rem;
+  margin-top: .6rem;
+  min-height: 1.2em;
+}
+
+/* ─── App shell ──────────────────────────────────────────────── */
+#appContainer { display: none; min-height: 100vh; }
+
+/* ─── Header ─────────────────────────────────────────────────── */
+.app-header {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: var(--header-h);
+  background: var(--white);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  padding: 0 1.5rem;
+  z-index: 100;
+  gap: 1rem;
+}
+.header-brand {
+  display: flex;
+  align-items: center;
+  gap: .7rem;
+  flex: 1;
+}
+.header-logo {
+  width: 36px; height: 36px;
+  background: var(--rose);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+.header-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--rose-dk);
+  line-height: 1.1;
+}
+.header-title small {
+  display: block;
+  font-family: 'DM Sans', sans-serif;
+  font-size: .7rem;
+  font-weight: 400;
+  color: var(--ink-3);
+  letter-spacing: .04em;
+}
+.header-progress {
+  display: flex;
+  align-items: center;
+  gap: .8rem;
+  flex-shrink: 0;
+}
+.progress-track {
+  width: 140px;
+  height: 6px;
+  background: var(--border);
+  border-radius: 3px;
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--rose), var(--rose-dk));
+  border-radius: 3px;
+  transition: width .4s ease;
+}
+.progress-label {
+  font-size: .78rem;
+  color: var(--ink-3);
+  white-space: nowrap;
+  font-weight: 500;
+}
+.sidebar-toggle {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: .4rem;
+  color: var(--ink-2);
+  font-size: 1.3rem;
+}
+
+/* ─── Layout ──────────────────────────────────────────────────── */
+.app-body {
+  display: flex;
+  padding-top: var(--header-h);
+  min-height: 100vh;
+}
+
+/* ─── Sidebar ─────────────────────────────────────────────────── */
+.sidebar {
+  width: var(--sidebar-w);
+  flex-shrink: 0;
+  background: var(--white);
+  border-right: 1px solid var(--border);
+  position: fixed;
+  top: var(--header-h);
+  bottom: 0;
+  left: 0;
+  overflow-y: auto;
+  padding: 1.4rem .8rem;
+  transition: transform .3s cubic-bezier(.16,1,.3,1);
+  z-index: 90;
+}
+.sidebar::-webkit-scrollbar { width: 4px; }
+.sidebar::-webkit-scrollbar-track { background: transparent; }
+.sidebar::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+.sidebar-section {
+  font-size: .68rem;
+  font-weight: 600;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  padding: .5rem .6rem .4rem;
+  margin-top: .6rem;
+}
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: .65rem;
+  padding: .65rem .8rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all .18s;
+  font-size: .88rem;
+  font-weight: 400;
+  color: var(--ink-2);
+  position: relative;
+  margin: 2px 0;
+  user-select: none;
+}
+.nav-item:hover { background: var(--rose-bg); color: var(--rose-dk); }
+.nav-item.active {
+  background: var(--rose);
+  color: var(--white);
+  font-weight: 600;
+  box-shadow: 0 2px 10px rgba(217,63,122,.3);
+}
+.nav-item.completed { color: var(--ink-2); }
+.nav-dot {
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  border: 2px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: .65rem;
+  transition: all .18s;
+}
+.nav-item.active .nav-dot {
+  border-color: rgba(255,255,255,.5);
+  background: rgba(255,255,255,.2);
+  color: white;
+}
+.nav-item.completed .nav-dot {
+  background: var(--green);
+  border-color: var(--green);
+  color: white;
+}
+
+/* ─── Content ─────────────────────────────────────────────────── */
+.content-area {
+  flex: 1;
+  margin-left: var(--sidebar-w);
+  padding: 2.5rem 2rem 4rem;
+  max-width: 820px;
+}
+
+/* ─── Module header ───────────────────────────────────────────── */
+.mod-header {
+  margin-bottom: 2rem;
+  animation: fadeUp .4s ease;
+}
+@keyframes fadeUp {
+  from { opacity:0; transform: translateY(12px); }
+  to   { opacity:1; transform: translateY(0); }
+}
+.mod-label {
+  display: inline-block;
+  font-size: .7rem;
+  font-weight: 600;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+  color: var(--rose);
+  margin-bottom: .6rem;
+}
+.mod-header h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.2rem;
+  font-weight: 900;
+  color: var(--ink);
+  line-height: 1.15;
+  margin-bottom: .8rem;
+}
+.mod-header-line {
+  width: 48px; height: 3px;
+  background: var(--rose);
+  border-radius: 2px;
+}
+
+/* ─── Body text ───────────────────────────────────────────────── */
+.mod-body { animation: fadeUp .4s ease .05s both; }
+.mod-body p {
+  color: var(--ink-2);
+  line-height: 1.85;
+  margin-bottom: 1.1rem;
+  font-size: 1rem;
+  font-weight: 300;
+}
+.mod-body h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--ink);
+  margin: 2rem 0 .7rem;
+}
+.mod-body ul, .mod-body ol {
+  margin: .4rem 0 1.2rem 1.2rem;
+  color: var(--ink-2);
+  font-weight: 300;
+}
+.mod-body li {
+  margin-bottom: .55rem;
+  line-height: 1.7;
+  font-size: 1rem;
+}
+.mod-body li strong { color: var(--ink); font-weight: 600; }
+
+/* ─── Quote ───────────────────────────────────────────────────── */
+.quote-box {
+  border-left: 3px solid var(--rose);
+  padding: 1rem 1.4rem;
+  margin: 1.6rem 0;
+  font-style: italic;
+  color: var(--ink-2);
+  background: var(--rose-bg);
+  border-radius: 0 8px 8px 0;
+}
+
+/* ─── Story ───────────────────────────────────────────────────── */
+.story-box {
+  border: 1px solid var(--border);
+  border-top: 3px solid var(--rose);
+  border-radius: var(--radius);
+  padding: 1.4rem 1.5rem;
+  margin: 1.8rem 0;
+  background: var(--white);
+}
+.story-box .story-label {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  font-size: .72rem;
+  font-weight: 600;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--rose);
+  margin-bottom: .8rem;
+}
+.story-box h4 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: .7rem;
+}
+.story-box p {
+  color: var(--ink-2);
+  font-weight: 300;
+  line-height: 1.8;
+  font-size: .97rem;
+  margin-bottom: .8rem;
+}
+.story-box p:last-child { margin-bottom: 0; }
+
+/* ─── Exercise ────────────────────────────────────────────────── */
+.exercise-box {
+  background: var(--cream);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--rose);
+  border-radius: var(--radius);
+  padding: 1.4rem 1.5rem;
+  margin: 1.6rem 0;
+}
+.exercise-box h4 {
+  font-size: .88rem;
+  font-weight: 600;
+  color: var(--rose-dk);
+  margin-bottom: .9rem;
+  display: flex;
+  align-items: flex-start;
+  gap: .5rem;
+}
+.exercise-box h4 .ex-num {
+  background: var(--rose);
+  color: white;
+  font-size: .7rem;
+  font-weight: 700;
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: .05rem;
+}
+.exercise-box p {
+  color: var(--ink-2);
+  font-size: .94rem;
+  font-weight: 300;
+  line-height: 1.75;
+  margin-bottom: .8rem;
+}
+.exercise-box textarea {
+  width: 100%;
+  min-height: 110px;
+  padding: .9rem 1rem;
+  border: 2px solid var(--border);
+  border-radius: 8px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: .95rem;
+  font-weight: 300;
+  color: var(--ink);
+  background: var(--white);
+  resize: vertical;
+  outline: none;
+  transition: border-color .2s, box-shadow .2s;
+  line-height: 1.7;
+}
+.exercise-box textarea:focus {
+  border-color: var(--rose);
+  box-shadow: 0 0 0 3px var(--rose-lt);
+}
+.exercise-box textarea::placeholder { color: #b0909c; }
+.exercise-hint {
+  margin-top: .7rem;
+  padding: .6rem .9rem;
+  background: #FFF8E8;
+  border-left: 3px solid var(--amber);
+  border-radius: 0 6px 6px 0;
+  font-size: .83rem;
+  color: #7A5820;
+  line-height: 1.6;
+}
+
+/* ─── Nav buttons ─────────────────────────────────────────────── */
+.nav-buttons {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 2.5rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--border);
+  gap: 1rem;
+}
+.btn-nav {
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+  padding: .8rem 1.6rem;
+  border-radius: var(--radius);
+  font-family: 'DM Sans', sans-serif;
+  font-size: .95rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: all .2s;
+}
+.btn-nav.prev {
+  background: var(--white);
+  color: var(--ink-2);
+  border: 1px solid var(--border);
+}
+.btn-nav.prev:hover { background: var(--rose-bg); border-color: var(--rose-lt); }
+.btn-nav.next {
+  background: var(--rose);
+  color: var(--white);
+  box-shadow: 0 3px 14px rgba(217,63,122,.35);
+}
+.btn-nav.next:hover {
+  background: var(--rose-dk);
+  transform: translateY(-1px);
+  box-shadow: 0 5px 18px rgba(217,63,122,.45);
+}
+.btn-nav.next:disabled {
+  background: var(--border);
+  color: #aaa;
+  box-shadow: none;
+  cursor: not-allowed;
+  transform: none;
+}
+.btn-invisible { visibility: hidden; }
+
+/* ─── Completion badge ────────────────────────────────────────── */
+.completion-badge {
+  background: linear-gradient(135deg, var(--green), #2d8a55);
+  color: white;
+  border-radius: var(--radius);
+  padding: 1.2rem 1.5rem;
+  text-align: center;
+  font-weight: 600;
+  font-size: 1rem;
+  margin: 1.5rem 0;
+  box-shadow: 0 4px 16px rgba(76,175,122,.3);
+}
+
+/* ─── Welcome checklist ───────────────────────────────────────── */
+.module-list {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: .6rem;
+  margin: 1.2rem 0;
+}
+.module-pill {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: .6rem .9rem;
+  font-size: .85rem;
+  color: var(--ink-2);
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  font-weight: 300;
+}
+.module-pill span { color: var(--rose); font-size: .75rem; }
+
+/* ─── Overlay (mobile) ────────────────────────────────────────── */
+.sidebar-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(28,16,24,.4);
+  z-index: 89;
+  backdrop-filter: blur(2px);
+}
+
+/* ─── Responsive ──────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  :root { --sidebar-w: 260px; }
+  .sidebar {
+    transform: translateX(-100%);
+  }
+  .sidebar.open {
+    transform: translateX(0);
+    box-shadow: var(--shadow-lg);
+  }
+  .sidebar-overlay.show { display: block; }
+  .sidebar-toggle { display: flex; }
+  .content-area {
+    margin-left: 0;
+    padding: 1.5rem 1rem 3rem;
+  }
+  .mod-header h2 { font-size: 1.7rem; }
+  .progress-track { width: 90px; }
+  .module-list { grid-template-columns: 1fr; }
+  .header-title small { display: none; }
+}
+</style>
 </head>
 <body>
 
-<div class="container">
-    <div class="login-screen" id="loginScreen">
-        <h1>🌟 Sana Tu Mundo Interior</h1>
-        <p>Tu Viaje de Transformación</p>
-        <input type="text" id="accessCode" placeholder="Código de acceso">
-        <br><button onclick="checkAccess()">Comenzar el Viaje</button>
-    </div>
+<!-- ═══ LOGIN ════════════════════════════════════════════════════ -->
+<div id="loginScreen">
+  <div class="login-card">
+    <span class="login-flower">🌸</span>
+    <h1>Sana Tu Mundo Interior</h1>
+    <div class="login-divider"></div>
+    <p>Tu viaje de transformación comienza aquí.<br>Ingresa tu código de acceso para continuar.</p>
+    <input type="text" id="accessCode" placeholder="Código de acceso" autocomplete="off"
+           onkeydown="if(event.key==='Enter') checkAccess()">
+    <button class="btn-primary" onclick="checkAccess()">Comenzar el Viaje ✦</button>
+    <div class="login-error" id="loginError"></div>
+  </div>
+</div>
 
-    <div class="app-container" id="appContainer">
-        <div class="header">
-            <h1>🌟 Sana Tu Mundo Interior - Tu Viaje de Transformación</h1>
-        </div>
-        <div class="main-content">
-            <div class="sidebar" id="sidebar"></div>
-            <div class="content-area" id="contentArea"></div>
-        </div>
+<!-- ═══ APP ══════════════════════════════════════════════════════ -->
+<div id="appContainer">
+
+  <!-- Header -->
+  <header class="app-header">
+    <button class="sidebar-toggle" onclick="toggleSidebar()">☰</button>
+    <div class="header-brand">
+      <div class="header-logo">🌸</div>
+      <div class="header-title">
+        Sana Tu Mundo Interior
+        <small>Viaje de Transformación</small>
+      </div>
     </div>
+    <div class="header-progress">
+      <div class="progress-track">
+        <div class="progress-fill" id="progressFill" style="width:0%"></div>
+      </div>
+      <span class="progress-label" id="progressLabel">0 / 11</span>
+    </div>
+  </header>
+
+  <div class="app-body">
+    <!-- Sidebar -->
+    <nav class="sidebar" id="sidebar"></nav>
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+
+    <!-- Main content -->
+    <main class="content-area" id="contentArea"></main>
+  </div>
 </div>
 
 <script>
+/* ════════════════════════════════════════════════════════════════
+   DATA
+════════════════════════════════════════════════════════════════ */
 const modules = [
-    {
-        id: 0,
-        title: 'Bienvenida al Viaje',
-        content: `
-            <h2>🌟 Bienvenida/o a Tu Viaje de Transformación</h2>
-            
-            <p>Has tomado una decisión valiente: embarcarte en el viaje más importante de tu vida, el viaje hacia tu interior. Este no es un camino fácil, pero es el único que realmente transforma.</p>
-            
-            <p>Durante este proceso, vas a descubrir partes de ti que quizás habías olvidado o nunca conociste. Vas a enfrentar sombras, a quitarte máscaras, a sanar heridas profundas. Pero también vas a encontrar tu luz, tu autenticidad, tu poder interior.</p>
-            
-            <div class="quote-box">
-                <p>"El viaje más largo es el viaje hacia adentro." - Dag Hammarskjöld</p>
-            </div>
-            
-            <h3>¿Cómo funciona este proceso?</h3>
-            <p>Este viaje está dividido en 10 módulos. Cada uno representa una etapa esencial de tu transformación:</p>
-            
-            <ul>
-                <li><strong>Módulo 1: El Socavón</strong> - Reconocer tu crisis y aceptar que necesitas cambiar</li>
-                <li><strong>Módulo 2: Las Máscaras</strong> - Identificar las falsas identidades que has construido</li>
-                <li><strong>Módulo 3: La Sombra</strong> - Enfrentar tus partes rechazadas</li>
-                <li><strong>Módulo 4: El Niño Interior</strong> - Sanar las heridas de tu infancia</li>
-                <li><strong>Módulo 5: Creencias Limitantes</strong> - Desmontar los pensamientos que te aprisionan</li>
-                <li><strong>Módulo 6: Las Heridas</strong> - Reconocer y transformar el dolor del pasado</li>
-                <li><strong>Módulo 7: El Perdón</strong> - Liberarte del resentimiento</li>
-                <li><strong>Módulo 8: La Gratitud</strong> - Cultivar una nueva forma de ver la vida</li>
-                <li><strong>Módulo 9: Tu Nuevo Yo</strong> - Diseñar conscientemente quién quieres ser</li>
-                <li><strong>Módulo 10: El Plan de Acción</strong> - Crear un camino concreto hacia tu transformación</li>
-            </ul>
-            
-            <h3>Importante:</h3>
-            <p>Este proceso requiere honestidad brutal contigo mismo/a. No hay respuestas correctas o incorrectas. Solo hay TU verdad.</p>
-            
-            <p>Cada módulo incluye ejercicios prácticos. Tómate el tiempo necesario para completarlos con profundidad. La transformación real sucede en el trabajo interno, no en la lectura superficial.</p>
-            
-            <div class="exercise-box">
-                <h4>✍️ Compromiso Inicial</h4>
-                <p>Antes de comenzar, escribe tu compromiso contigo mismo/a. ¿Por qué estás aquí? ¿Qué esperas lograr con este viaje?</p>
-                <textarea data-exercise="welcome-commitment" placeholder="Mi compromiso es..."></textarea>
-                <div class="exercise-hint">💡 Sé específico. Este compromiso será tu ancla cuando el proceso se ponga difícil.</div>
-            </div>
-        `
-    },
-    {
-        id: 1,
-        title: 'Módulo 1: El Socavón',
-        content: `
-            <h2>Módulo 1: El Socavón</h2>
-            
-            <h3>Reconociendo Tu Crisis</h3>
-            
-            <p>Hay momentos en la vida en que el suelo se abre bajo nuestros pies. De repente, todo lo que creíamos sólido se desmorona. La relación que pensábamos eterna termina. El trabajo que definía nuestra identidad desaparece. La salud que dábamos por sentada nos falla. Los sueños que perseguimos durante años se revelan vacios.</p>
-            
-            <p>Esto es el socavón: ese momento de crisis profunda donde todo lo conocido se derrumba y nos encontramos caídos en la oscuridad, sin saber cómo salir.</p>
-            
-            <div class="story-box">
-                <h4>💭 La historia de Camila</h4>
-                <p>Camila tenía 35 años cuando su mundo se derrumbó. Después de 12 años de matrimonio, su esposo le confesó que había estado viviendo una doble vida. Tenía otra familia. Otros hijos.</p>
-                <p>El socavón de Camila no fue solo el fin de su matrimonio. Fue el colapso de toda su identidad. Ella se había definido como "la esposa perfecta". Había sacrificado su carrera, sus amistades, sus sueños personales por "su familia". Y ahora descubría que esa familia que ella creía conocer era una ilusión.</p>
-                <p>Durante meses, Camila apenas podía levantarse de la cama. Se preguntaba cómo no había visto las señales. Cómo había sido tan ciega. Se culpaba, se odiaba, sentía que su vida había sido una mentira.</p>
-                <p>Pero el socavón, aunque doloroso, fue el comienzo de su verdadera transformación. Porque en la oscuridad de ese abismo, Camila finalmente tuvo que preguntarse: ¿Quién soy yo sin este matrimonio? ¿Quién soy yo más allá de ser "la esposa perfecta"?</p>
-            </div>
-            
-            <p>El socavón es doloroso, pero también es sagrado. Es el momento en que la vida nos obliga a despertar. Es la invitación, aunque brutal, a dejar de vivir en automático y comenzar a vivir conscientemente.</p>
-            
-            <h3>Las Señales del Socavón</h3>
-            <p>No siempre el socavón es tan dramático como el de Camila. A veces es más sutil:</p>
-            <ul>
-                <li>Despertar cada mañana con una sensación de vacío, aunque tu vida "debería" hacerte feliz</li>
-                <li>Sentir que estás representando un papel, pero no sabes quién eres realmente</li>
-                <li>Una ansiedad constante que no logras explicar</li>
-                <li>La sensación de estar viviendo la vida que otros esperan de ti, no la tuya</li>
-                <li>Relaciones que se sienten vacias, aunque estés rodeado de gente</li>
-                <li>Logros que no te dan la satisfacción que esperabas</li>
-            </ul>
-            
-            <div class="exercise-box">
-                <h4>✍️ Ejercicio 1: Identificando Tu Socavón</h4>
-                <p>¿Cuál fue o es tu socavón? Describe la situación o momento en que sentiste que todo se derrumbaba. Si aún no has identificado un momento específico, describe la sensación de vacío o crisis que te trajo aquí.</p>
-                <textarea data-exercise="mod1-ex1" placeholder="Mi socavón fue..."></textarea>
-                <div class="exercise-hint">💡 No censures. Escribe sin filtros. Nadie más va a leer esto.</div>
-            </div>
-            
-            <div class="exercise-box">
-                <h4>✍️ Ejercicio 2: Las Emociones del Socavón</h4>
-                <p>¿Qué emociones estás sintiendo o sentiste en tu socavón? Nombra todas las que puedas identificar (miedo, rabia, tristeza, culpa, vergüenza, confusión, etc.)</p>
-                <textarea data-exercise="mod1-ex2" placeholder="Las emociones que siento/sentí son..."></textarea>
-                <div class="exercise-hint">💡 Nombrar las emociones es el primer paso para procesarlas. No intentes ser "positivo" todavía.</div>
-            </div>
-            
-            <div class="exercise-box">
-                <h4>✍️ Ejercicio 3: Las Pérdidas</h4>
-                <p>¿Qué has perdido o sientes que estás perdiendo? (pueden ser cosas concretas como relaciones o trabajo, o abstractas como seguridad, identidad, confianza)</p>
-                <textarea data-exercise="mod1-ex3" placeholder="He perdido o estoy perdiendo..."></textarea>
-            </div>
-            
-            <div class="exercise-box">
-                <h4>✍️ Ejercicio 4: La Resistencia</h4>
-                <p>¿De qué maneras has intentado evitar o negar tu socavón? ¿Cómo has tratado de escapar del dolor? (adicciones, distracciones, negación, culpar a otros, etc.)</p>
-                <textarea data-exercise="mod1-ex4" placeholder="He intentado evitar mi dolor mediante..."></textarea>
-                <div class="exercise-hint">💡 La resistencia es natural. Reconocerla es valiente.</div>
-            </div>
-            
-            <div class="exercise-box">
-                <h4>✍️ Ejercicio 5: El Regalo Oculto</h4>
-                <p>Aunque ahora parezca imposible, todos los socavones traen un regalo: la oportunidad de transformación. ¿Puedes imaginar, aunque sea vagamente, qué podría surgir de esta crisis? ¿Qué versión de ti podría nacer de este dolor?</p>
-                <textarea data-exercise="mod1-ex5" placeholder="El posible regalo de mi socavón podría ser..."></textarea>
-                <div class="exercise-hint">💡 Está bien si aún no ves nada positivo. Simplemente permite la posibilidad de que exista.</div>
-            </div>
-        `
-    },
-    {
-        id: 2,
-        title: 'Módulo 2: Las Máscaras',
-        content: `
-            <h2>Módulo 2: Las Máscaras</h2>
-            
-            <h3>Las Identidades Falsas que Construimos</h3>
-            
-            <p>Desde muy temprano en la vida, aprendemos que mostrar quiénes somos realmente no es seguro. Cuando el niño expresa rabia y es castigado, cuando la niña muestra vulnerabilidad y es rechazada, cuando nuestras necesidades auténticas son ignoradas o ridiculizadas, aprendemos una lección dolorosa: ser yo mismo no es aceptable.</p>
-            
-            <p>Entonces comenzamos a usar máscaras. Construimos personajes que creemos que serán más aceptables, más amados, más exitosos. "El bueno", "la perfecta", "el fuerte", "la alegre", "el exitoso", "la cuidadora". Estas máscaras nos protegen, pero también nos aprisionan.</p>
-            
-            <div class="story-box">
-                <h4>💭 La historia de Roberto</h4>
-                <p>Roberto creció en una familia donde los hombres no lloraban. Su padre era duro, exigente, emocionalmente distante. Cuando Roberto tenía 8 años y lloraba porque otros niños lo habían golpeado, su padre le dijo: "Los hombres no lloran. Deja de ser una niña."</p>
-                <p>Roberto aprendió la lección. Construyó una máscara de fortaleza. Se volvió "el fuerte", el que nunca mostraba debilidad, el que siempre tenía todo bajo control. Esta máscara le sirvió bien en muchos sentidos. Lo ayudó a ser respetado, a tener éxito en su carrera, a ser visto como un líder.</p>
-                <p>Pero a los 40 años, Roberto se encontró en su socavón. Su esposa le pidió el divorcio. "Vivo contigo", le dijo, "pero no te conozco. Nunca sé qué sientes realmente. Es como vivir con una estatua."</p>
-                <p>Roberto se dio cuenta de que había usado su máscara durante tanto tiempo que ya no sabía qué había debajo. ¿Quién era él sin la máscara del hombre fuerte? ¿Qué sentía realmente? Había enterrado sus emociones tan profundo que ya no podía acceder a ellas.</p>
-            </div>
-            
-            <h3>Los Tipos de Máscaras Más Comunes</h3>
-            <ul>
-                <li><strong>El/La Perfeccionista:</strong> "Si lo hago todo perfecto, seré amado/a y aceptado/a"</li>
-                <li><strong>El/La Complaciente:</strong> "Si hago felices a todos, nadie me abandonará"</li>
-                <li><strong>El/La Fuerte:</strong> "Si nunca muestro debilidad, estaré a salvo"</li>
-                <li><strong>El/La Exitoso/a:</strong> "Si tengo éxito, valdré algo"</li>
-                <li><strong>El/La Alegre:</strong> "Si siempre estoy positivo/a, nadie verá mi dolor"</li>
-                <li><strong>El/La Cuidador/a:</strong> "Si cuido de todos, seré necesario/a y no me abandonarán"</li>
-                <li><strong>El/La Rebelde:</strong> "Si rechazo todo, nadie podrá herirme"</li>
-                <li><strong>El/La Víctima:</strong> "Si muestro cuánto sufro, alguien vendrá a rescatarme"</li>
-            </ul>
-            
-            <p>El problema no es que estas máscaras existan. Fueron estrategias de supervivencia necesarias. El problema es cuando olvidamos que son máscaras y las confundimos con nuestra verdadera identidad.</p>
-            
-            <div class="exercise-box">
-                <h4>✍️ Ejercicio 1: Identificando Tus Máscaras</h4>
-                <p>¿Qué máscaras has usado en tu vida? De la lista anterior u otras que identifiques, ¿cuáles reconoces en ti?</p>
-                <textarea data-exercise="mod2-ex1" placeholder="Las máscaras que he usado son..."></textarea>
-                <div class="exercise-hint">💡 La mayoría usamos varias máscaras en diferentes contextos. Sé honesto/a.</div>
-            </div>
-            
-            <div class="exercise-box">
-                <h4>✍️ Ejercicio 2: ¿Cómo Construiste Tus Máscaras?</h4>
-                <p>¿Cuándo y cómo aprendiste a usar esas máscaras? ¿Qué situaciones de tu infancia o juventud te enseñaron que no era seguro ser tú mismo/a?</p>
-                <textarea data-exercise="mod2-ex2" placeholder="Aprendí a usar máscaras cuando..."></textarea>
-                <div class="exercise-hint">💡 Recuerda momentos específicos donde decidiste ocultar partes de ti.</div>
-            </div>
-            
-            <div class="exercise-box">
-                <h4>✍️ Ejercicio 3: El Precio de las Máscaras</h4>
-                <p>¿Qué te han costado estas máscaras? ¿Qué has sacrificado por mantenerlas? (autenticidad, intimidad, energía, salud, relaciones profundas, etc.)</p>
-                <textarea data-exercise="mod2-ex3" placeholder="Mis máscaras me han costado..."></textarea>
-            </div>
-            
-            <div class="exercise-box">
-                <h4>✍️ Ejercicio 4: Momentos Sin Máscara</h4>
-                <p>¿Recuerdas algún momento en que te quitaste la máscara y mostraste quién eres realmente? ¿Qué pasó? ¿Cómo te sentiste?</p>
-                <textarea data-exercise="mod2-ex4" placeholder="Un momento sin máscara fue..."></textarea>
-                <div class="exercise-hint">💡 Estos momentos nos muestran qué es posible cuando somos auténticos.</div>
-            </div>
-            
-            <div class="exercise-box">
-                <h4>✍️ Ejercicio 5: El Miedo a Quitarte la Máscara</h4>
-                <p>¿Qué temes que pasaría si te quitaras tus máscaras? ¿Qué es lo peor que podría suceder?</p>
-                <textarea data-exercise="mod2-ex5" placeholder="Si me quitara mis máscaras, temo que..."></textarea>
-                <div class="exercise-hint">💡 Nombrar el miedo es el primer paso para desarmarlo.</div>
-            </div>
-            
-            <div class="exercise-box">
-                <h4>✍️ Ejercicio 6: ¿Quién Eres Sin la Máscara?</h4>
-                <p>Debajo de todas tus máscaras, ¿quién eres? ¿Qué partes de ti has estado ocultando?</p>
-                <textarea data-exercise="mod2-ex6" placeholder="Sin mis máscaras, yo soy..."></textarea>
-                <div class="exercise-hint">💡 Está bien si aún no lo sabes completamente. Este es solo el comienzo de tu exploración.</div>
-            </div>
-        `
-    },
-    {
-        id: 3,
-        title: 'Módulo 3: La Sombra',
-        content: `
-            <h2>Módulo 3: La Sombra</h2>
-            
-            <h3>Enfrentando Lo Que Hemos Rechazado</h3>
-            
-            <p>Carl Jung lo explicó claramente: la sombra es todo aquello en nosotros que hemos rechazado, negado o reprimido porque lo consideramos inaceptable. Son las partes de nosotros mismos que hemos exiliado al inconsciente porque nos avergüenzan, nos asustan o contradicen la imagen que queremos proyectar.</p>
-            
-            <p>La ironía es que mientras más rechazamos nuestra sombra, más poder tiene sobre nosotros. Lo que negamos no desaparece, solo se vuelve inconsciente y comienza a controlarnos desde ahí.</p>
-            
-            <div class="story-box">
-                <h4>💭 La historia de Sofía</h4>
-                <p>Sofía se enorgullecía de ser "la buena". Nunca se enojaba, siempre era amable, siempre ponía las necesidades de otros primero. Se consideraba una persona espiritual, evolucionada, pacífica.</p>
-                <p>Pero Sofía tenía un secreto que ni siquiera se confesaba a sí misma: estaba llena de rabia. Rabia contra su madre que siempre la criticaba. Rabia contra su hermana que siempre recibía más atención. Rabia contra su jefe que abusaba de su amabilidad. Rabia contra su pareja que daba por sentado todo lo que ella hacía.</p>
-                <p>Esta rabia era su sombra. Y como Sofía la rechazaba ("las personas espirituales no se enojan"), la rabia encontraba formas indirectas de salir: comentarios pasivo-agresivos, enfermedades psicosomáticas, sabotaje inconsciente de sus propios proyectos, explosiones ocasionales desproporcionadas por cosas pequeñas.</p>
-                <p>El socavón de Sofía llegó cuando desarrolló una úlcera severa. Su cuerpo, cansado de guardar tanta rabia reprimida, colapsó. Fue en terapia donde finalmente comenzó a enfrentar su sombra: esa parte rabiosa, egoísta, que quería gritar "¡YA BASTA!"</p>
-                <p>Y cuando finalmente se permitió sentir y expresar esa rabia, algo sorprendente sucedió: se sintió más completa. Más real. Más humana. La rabia, cuando fue reconocida y expresada sanamente, se transformó en límites saludables, en asertividad, en capacidad de decir "no".</p>
-            </div>
-            
-            <h3>¿Cómo Reconocer Tu Sombra?</h3>
-            <p>Tu sombra se revela en:</p>
-            <ul>
-                <li><strong>Lo que más criticas en otros:</strong> A menudo, lo que más nos irrita en los demás son aspectos de nosotros mismos que hemos reprimido.</li>
-                <li><strong>Tus "pecados secretos":</strong> Esos pensamientos, deseos o comportamientos que te avergüenzan y no quisieras que nadie supiera.</li>
-                <li><strong>Tus reacciones desproporcionadas:</strong> Cuando respondes con una intensidad emocional que no corresponde a la situación.</li>
-                <li><strong>Lo que niegas rotundamente:</strong> "Yo NUNCA soy..." "Yo NO soy una persona que..." La negación rotunda suele señalar sombra.</li>
-                <li><strong>Tus sueños y pesadillas:</strong> El inconsciente habla a través de símbolos.</li>
-            </ul>
-            
-            <div class="exercise-box">
-                <h4>✍️ Ejercicio 1: ¿Qué Rechazas de Ti?</h4>
-                <p>¿Qué aspectos de ti mismo/a consideras inaceptables? ¿Qué partes de ti te avergüenzan o te asustan?</p>
-                <textarea data-exercise="mod3-ex1" placeholder="Los aspectos que rechazo de mí son..."></textarea>
-                <div class="exercise-hint">💡 Este es un ejercicio de honestidad radical. Recuerda: lo que reconoces pierde poder sobre ti.</div>
-            </div>
-            
-            <div class="exercise-box">
-                <h4>✍️ Ejercicio 2: El Espejo de los Otros</h4>
-                <p>¿Qué es lo que más te irrita o juzgas en otras personas? Haz una lista.</p>
-                <textarea data-exercise="mod3-ex2" placeholder="Lo que más me irrita en otros es..."></textarea>
-                <div class="exercise-hint">💡 Ahora pregúntate: ¿Existe algo de eso en mí, aunque sea en forma pequeña o disfrazada?</div>
-            </div>
-            
-            <div class="exercise-box">
-                <h4>✍️ Ejercicio 3: Tus "Pecados Secretos"</h4>
-                <p>¿Qué pensamientos, deseos o comportamientos tuyos te avergüenzan? ¿Qué no quisieras que nadie supiera de ti?</p>
-                <textarea data-exercise="mod3-ex3" placeholder="Mis secretos vergonzosos son..."></textarea>
-                <div class="exercise-hint">💡 Lo que traes a la luz pierde su poder oscuro. La sombra solo es poderosa en la oscuridad.</div>
-            </div>
-            
-            <div class="exercise-box">
-                <h4>✍️ Ejercicio 4: Reacciones Desproporcionadas</h4>
-                <p>¿Recuerdas situaciones donde reaccionaste con una intensidad emocional desproporcionada? ¿Qué botón se activó en ti?</p>
-                <textarea data-exercise="mod3-ex4" placeholder="Reaccioné desproporcionadamente cuando..."></textarea>
-            </div>
-            
-            <div class="exercise-box">
-                <h4>✍️ Ejercicio 5: Diálogo con Tu Sombra</h4>
-                <p>Imagina que puedes hablar con esa parte rechazada de ti. ¿Qué te diría? ¿Qué necesita? ¿Por qué existe?</p>
-                <textarea data-exercise="mod3-ex5" placeholder="Mi sombra me diría..."></textarea>
-                <div class="exercise-hint">💡 La sombra no es tu enemiga. Es una parte de ti que necesita ser integrada, no destruida.</div>
-            </div>
-            
-            <div class="exercise-box">
-                <h4>✍️ Ejercicio 6: Integrando la Sombra</h4>
-                <p>¿Cómo podrías dar espacio saludable a estos aspectos rechazados? ¿Qué forma constructiva podría tomar esta energía?</p>
-                <textarea data-exercise="mod3-ex6" placeholder="Podría integrar mi sombra mediante..."></textarea>
-                <div class="exercise-hint">💡 Por ejemplo: La rabia reprimida puede transformarse en asertividad. El egoísmo negado puede volverse autocuidado saludable.</div>
-            </div>
-        `
-    },
-    {
-        id: 4,
-        title: 'Módulo 4: El Niño Interior',
-        content: `
-            <h2>Módulo 4: El Niño Interior</h2>
-            
-            <h3>Sanando las Heridas de Tu Infancia</h3>
-            
-            <p>Dentro de cada uno de nosotros vive todavía el niño o la niña que fuimos. No como un recuerdo, sino como una parte viva de nuestra psique. Ese niño interior carga con todas las heridas, necesidades insatisfechas y emociones no procesadas de nuestra infancia.</p>
-            
-            <p>Cuando ese niño interior no ha sido sanado, sigue controlando muchas de nuestras reacciones adultas. Nuestros miedos irracionales, nuestros patrones de relación destructivos, nuestras adicciones, nuestra incapacidad para poner límites, nuestra necesidad desesperada de aprobación, todo esto a menudo viene de un niño herido que grita desde dentro pidiendo lo que nunca recibió.</p>
-            
-            <div class="story-box">
-                <h4>💭 La historia de Lucía</h4>
-                <p>Lucía tenía 38 años y tres relaciones fracasadas a sus espaldas. Siempre el mismo patrón: conocía a un hombre, se enamoraba intensamente, se entregaba completamente, y al primer signo de distanciamiento de su pareja, entraba en pánico. Se volvía demandante, celosa, necesitada. Hasta que él, ahogado por su intensidad, la dejaba. Lo cual confirmaba su miedo profundo: "Siempre me abandonan."</p>
-                <p>En terapia, Lucía comenzó a explorar su infancia. Su padre había dejado a la familia cuando ella tenía 5 años. Simplemente se fue un día y nunca volvió. No hubo explicaciones, no hubo despedidas. Solo ausencia.</p>
-                <p>La niña Lucía no podía entender qué había pasado. En su mente infantil, solo había una explicación posible: "Papá se fue porque yo no fui suficiente. No fui lo suficientemente buena, lo suficientemente amable. Si hubiera sido mejor, se habría quedado."</p>
-                <p>Esa niña de 5 años, aterrorizada de ser abandonada nuevamente, seguió viviendo dentro de Lucía adulta. Y cada vez que una relación nueva empezaba, esa niña entraba en pánico: "¡No! ¡No me dejes! ¡Haré lo que sea!" Y Lucía adulta, sin darse cuenta, actuaba desde ese lugar de terror infantil.</p>
-                <p>La sanación de Lucía comenzó cuando aprendió a reconocer cuándo era su niña interior quien estaba al mando, y cuando aprendió a darle a esa niña lo que su padre nunca le dio: la seguridad de que ella es suficiente, que el abandono de su padre no fue su culpa, que ella es digna de amor incondicional.</p>
-            </div>
-            
-            <h3>Las Heridas Básicas del Niño Interior</h3>
-            <ul>
-                <li><strong>Abandono:</strong> "No soy suficiente para que te quedes"</li>
-                <li><strong>Rechazo:</strong> "Hay algo malo en mí"</li>
-                <li><strong>Traición:</strong> "No puedo confiar en nadie"</li>
-                <li><strong>Humillación:</strong> "Soy defectuoso/a y todos lo ven"</li>
-                <li><strong>Injusticia:</strong> "El mundo es injusto y no puedo hacer nada"</li>
-            </ul>
-            
-            <div class="exercise-box">
-                <h4>✍️ Ejercicio 1: Conectando con Tu Niño Interior</h4>
-                <p>Cierra los ojos y visualiza al niño/a que fuiste. ¿Qué edad tiene? ¿Cómo se ve? ¿Cómo se siente? Describe lo que percibes.</p>
-                <textarea data-exercise="mod4-ex1" placeholder="Mi niño/a interior es..."></textarea>
-                <div class="exercise-hint">💡 No fuerces nada. Solo permite que surja una imagen o sensación.</div>
-            </div>
-            
-            <div class="exercise-box">
-                <h4>✍️ Ejercicio 2: Las Heridas de Tu Niño Interior</h4>
-                <p>¿Qué heridas carga tu niño interior? ¿Abandono? ¿Rechazo? ¿Traición? ¿Humillación? ¿Injusticia?</p>
-                <textarea data-exercise="mod4-ex2" placeholder="Las heridas de mi niño interior son..."></textarea>
-            </div>
-            
-            <div class="exercise-box">
-                <h4>✍️ Ejercicio 3: Situaciones Detonadoras</h4>
-                <p>¿En qué situaciones actuales reacciona tu niño interior herido? ¿Cuándo te encuentras reaccionando de forma infantil o desproporcionada?</p>
-                <textarea data-exercise="mod4-ex3" placeholder="Mi niño interior se activa cuando..."></textarea>
-                <div class="exercise-hint">💡 Por ejemplo: cuando alguien cancela planes, cuando no recibes respuesta inmediata, cuando te critican, etc.</div>
-            </div>
-            
-            <div class="exercise-box">
-                <h4>✍️ Ejercicio 4: Carta a Tu Niño Interior</h4>
-                <p>Escribe una carta a ese niño/a que fuiste. ¿Qué necesita escuchar? ¿Qué consuelo, qué validación, qué amor nunca recibió?</p>
-                <textarea data-exercise="mod4-ex4" placeholder="Querido/a niño/a interior..."></textarea>
-                <div class="exercise-hint">💡 Escribe como si le hablaras a un niño real. Con ternura, compasión y validación.</div>
-            </div>
-            
-            <div class="exercise-box">
-                <h4>✍️ Ejercicio 5: Lo Que Tu Niño Interior Necesitó y No Recibió</h4>
-                <p>¿Qué necesitabas de tus padres/cuidadores que no recibiste? (protección, validación, atención, amor incondicional, permiso para ser tú mismo/a, etc.)</p>
-                <textarea data-exercise="mod4-ex5" placeholder="Lo que necesité y no recibí fue..."></textarea>
-            </div>
-            
-            <div class="exercise-box">
-                <h4>✍️ Ejercicio 6: Re-paternización</h4>
-                <p>¿Cómo puedes darte a ti mismo/a ahora lo que no recibiste entonces? ¿Cómo puede tu yo adulto cuidar de tu niño interior?</p>
-                <textarea data-exercise="mod4-ex6" placeholder="Puedo cuidar de mi niño interior mediante..."></textarea>
-                <div class="exercise-hint">💡 Ejemplos: Validar tus emociones, ponerte límites saludables, darte permiso para descansar, celebrar tus logros, etc.</div>
-            </div>
-        `
-    },
-    {
-        id: 5,
-        title: 'Módulo 5: Creencias Limitantes',
-        content: `
-            <h2>Módulo 5: Creencias Limitantes</h2>
-            
-            <h3>Desmantelando los Pensamientos Que Te Aprisionan</h3>
-            
-            <p>Nuestras creencias son los lentes a través de los cuales vemos el mundo. No vemos la realidad tal como es, sino tal como nuestras creencias nos dicen que es. Y muchas de nuestras creencias más profundas son limitantes, falsas y destructivas.</p>
-            
-            <p>Las creencias limitantes son esas verdades que aceptamos como absolutas sobre nosotros mismos, los demás o el mundo: "No soy suficiente", "No merezco ser feliz", "El mundo es peligroso", "No puedo confiar en nadie", "Siempre fracaso", "El amor duele".</p>
-            
-            <p>Estas creencias no son la verdad. Son interpretaciones que hicimos, generalmente en la infancia, basadas en experiencias limitadas. Pero las hemos repetido tanto tiempo que se han vuelto profecias autocumplidas.</p>
-            
-            <div class="story-box">
-                <h4>💭 La historia de Marcos</h4>
-                <p>Marcos tenía 42 años y trabajaba en el mismo puesto de oficina desde hacía 15 años. Le habían ofrecido ascensos varias veces, pero siempre los rechazaba con excusas: "No estoy listo", "No tengo suficiente experiencia", "Podría fracasar".</p>
-                <p>La verdad más profunda era una creencia que Marcos había formado cuando tenía 10 años. Era el recital de fin de año. Marcos había practicado su poema durante semanas. Pero cuando subió al escenario y vio a todos mirándolo, se quedó en blanco. Olvidó las palabras. Se paró ahí, paralizado, mientras el silencio se extendía. Finalmente, bajó del escenario entre las risas de algunos niños.</p>
-                <p>En ese momento, Marcos formó una creencia: "No puedo hacerlo bien cuando me observan. Soy un fracaso cuando importa." Esta creencia lo había limitado durante 32 años.</p>
-                <p>Fue solo cuando comenzó a cuestionar esta creencia, cuando se dio cuenta de que una experiencia a los 10 años no definía su capacidad como adulto, que finalmente pudo aceptar un ascenso. Y descubrió que podía hacerlo bien, muy bien de hecho.</p>
-            </div>
-            
-            <h3>Tipos de Creencias Limitantes</h3>
-            <ul>
-                <li><strong>Sobre ti mismo:</strong> "No soy suficiente", "Soy defectuoso", "No merezco amor/éxito/felicidad"</li>
-                <li><strong>Sobre los demás:</strong> "No se puede confiar en nadie", "La gente solo busca aprovecharse"</li>
-                <li><strong>Sobre la vida:</strong> "El mundo es peligroso", "La vida es sufrimiento", "No hay suficiente para todos"</li>
-                <li><strong>Sobre el cambio:</strong> "Yo soy así", "Es demasiado tarde para cambiar", "No puedo"</li>
-            </ul>
-            
-            <div class="exercise-box">
-                <h4>✍️ Ejercicio 1: Identificando Tus Creencias Limitantes</h4>
-                <p>Haz una lista de las creencias limitantes que reconoces en ti. Completa estas frases: "No puedo...", "No merezco...", "Siempre...", "Nunca..."</p>
-                <textarea data-exercise="mod5-ex1" placeholder="Mis creencias limitantes son..."></textarea>
-                <div class="exercise-hint">💡 Las creencias más profundas son las que ni siquiera cuestionamos porque las vemos como "verdades obvias".</div>
-            </div>
-            
-            <div class="exercise-box">
-                <h4>✍️ Ejercicio 2: El Origen de Tus Creencias</h4>
-                <p>Elige una de tus creencias limitantes más fuertes. ¿Cuándo la adoptaste? ¿Qué experiencia o mensaje te llevó a creerla?</p>
-                <textarea data-exercise="mod5-ex2" placeholder="Esta creencia nació cuando..."></textarea>
-            </div>
-            
-            <div class="exercise-box">
-                <h4>✍️ Ejercicio 3: El Costo de Tus Creencias</h4>
-                <p>¿Qué te han costado estas creencias limitantes? ¿Qué oportunidades has perdido? ¿Qué experiencias has evitado? ¿Cómo han restringido tu vida?</p>
-                <textarea data-exercise="mod5-ex3" placeholder="Estas creencias me han costado..."></textarea>
-            </div>
-            
-            <div class="exercise-box">
-                <h4>✍️ Ejercicio 4: Cuestionando la Evidencia</h4>
-                <p>Toma una de tus creencias limitantes. ¿Es realmente cierta? ¿Hay evidencia que la contradice? ¿Hay excepciones?</p>
-                <textarea data-exercise="mod5-ex4" placeholder="Al cuestionar mi creencia, encuentro que..."></textarea>
-                <div class="exercise-hint">💡 Las creencias limitantes rara vez son absolutamente ciertas. Busca las excepciones, los matices.</div>
-            </div>
-            
-            <div class="exercise-box">
-                <h4>✍️ Ejercicio 5: Creando Creencias Empoderadoras</h4>
-                <p>Para cada creencia limitante que identificaste, ¿qué creencia empoderadoras podría reemplazarla? (que sea realista, no solo "pensamiento positivo" vacio)</p>
-                <textarea data-exercise="mod5-ex5" placeholder="Mis nuevas creencias empoderadoras son..."></textarea>
-                <div class="exercise-hint">💡 Ejemplo: "No soy suficiente" → "Estoy en proceso de crecimiento y merezco amor mientras aprendo".</div>
-            </div>
-            
-            <div class="exercise-box">
-                <h4>✍️ Ejercicio 6: Experimento de Realidad</h4>
-                <p>¿Qué pequeña acción podrías tomar esta semana para probar si tu creencia limitante es realmente cierta?</p>
-                <textarea data-exercise="mod5-ex6" placeholder="Voy a probar mi creencia mediante..."></textarea>
-                <div class="exercise-hint">💡 Las creencias cambian con experiencia, no solo con pensamiento. Necesitas evidencia nueva.</div>
-            </div>
-        `
-    },
-    {
-        id: 6,
-        title: 'Módulo 6: Las Heridas',
-        content: `
-            <h2>Módulo 6: Las Heridas</h2>
-            
-            <h3>Reconociendo y Transformando el Dolor del Pasado</h3>
-            
-            <p>Todos llevamos heridas. Algunas son grandes y obvias: abuso, abandono, traumas severos. Otras son más sutiles pero igual de profundas: la frialdad emocional de un padre, la preferencia constante por un hermano, las críticas que se volvieron la voz interna, el mensaje sutil de que tu existencia era una carga.</p>
-            
-            <p>Estas heridas no se curan simplemente con el tiempo. "El tiempo cura todas las heridas" es una mentira. El tiempo solo entierra las heridas, pero siguen ahí, infectadas, afectando cada aspecto de nuestra vida.</p>
-            
-            <p>Las heridas sin sanar se manifiestan como: patrones de relación destructivos, auto-sabotaje, adicciones, enfermedades psicosomáticas, incapacidad para recibir amor, miedo a la intimidad, necesidad de control, víctimismo crónico.</p>
-            
-            <div class="story-box">
-                <h4>💭 La historia de Ana</h4>
-                <p>Ana creció con una madre deprimida que, aunque nunca fue abusiva, era emocionalmente ausente. Ana aprendió desde muy pequeña a no necesitar nada, a no molestar, a ser "la niña fácil".</p>
-                <p>Cuando Ana lloraba, su madre suspiraba cansada y decía: "¿Otra vez? ¿Por qué eres tan difícil?" Ana aprendió rápido: tener necesidades es ser una carga. Expresar emociones es ser difícil. Así que dejó de pedir, dejó de llorar, dejó de necesitar.</p>
-                <p>A los 35 años, Ana estaba agotada. Había sido "la fuerte" toda su vida. Cuidaba de todos, pero nunca pedía ayuda. Daba y daba, pero no sabía recibir. Cuando alguien le ofrecía apoyo, instintivamente lo rechazaba: "Estoy bien, no te preocupes."</p>
-                <p>Su herida profunda era la creencia de que sus necesidades no importaban, de que pedir ayuda era ser una carga. Hasta que su cuerpo colapsó en un ataque de ansiedad severo y no tuvo más remedio que aceptar que necesitaba ayuda.</p>
-                <p>La sanación de Ana implicó aprender algo radical: que tener necesidades no te hace débil o difícil, te hace humano. Que pedir ayuda no es ser una carga, es permitir la conexión auténtica.</p>
-            </div>
-            
-            <div class="exercise-box">
-                <h4>✍️ Ejercicio 1: Inventario de Heridas</h4>
-                <p>¿Cuáles son las heridas más significativas de tu vida? Incluye tanto las grandes (traumas, pérdidas) como las "pequeñas" (rechazos, humillaciones, mensajes dañinos).</p>
-                <textarea data-exercise="mod6-ex1" placeholder="Mis heridas más significativas son..."></textarea>
-            </div>
-            
-            <div class="exercise-box">
-                <h4>✍️ Ejercicio 2: Cómo Se Manifiestan Tus Heridas</h4>
-                <p>¿Cómo afectan estas heridas tu vida actual? ¿Qué patrones, miedos o limitaciones vienen de ellas?</p>
-                <textarea data-exercise="mod6-ex2" placeholder="Estas heridas se manifiestan en mi vida como..."></textarea>
-                <div class="exercise-hint">💡 Observa tus patrones repetitivos. Ahí suelen estar las heridas sin sanar.</div>
-            </div>
-            
-            <div class="exercise-box">
-                <h4>✍️ Ejercicio 3: El Duelo No Procesado</h4>
-                <p>¿Qué emociones relacionadas con tus heridas nunca te permitiste sentir completamente? (rabia, tristeza, terror, impotencia, etc.)</p>
-                <textarea data-exercise="mod6-ex3" placeholder="Las emociones que no procesé son..."></textarea>
-                <div class="exercise-hint">💡 Para sanar, primero hay que sentir. Lo que reprimimos permanece.</div>
-            </div>
-            
-            <div class="exercise-box">
-                <h4>✍️ Ejercicio 4: Carta a Quien Te Hirió</h4>
-                <p>Escribe una carta (que no enviarás) a la persona que te hirió. Di todo lo que nunca pudiste decir. Sin censura.</p>
-                <textarea data-exercise="mod6-ex4" placeholder="Necesito decirte que..."></textarea>
-                <div class="exercise-hint">💡 Esta carta es para ti, no para ellos. Es para dar voz a tu dolor, no para buscar justicia.</div>
-            </div>
-            
-            <div class="exercise-box">
-                <h4>✍️ Ejercicio 5: La Compasión por Tu Dolor</h4>
-                <p>Si un amigo te contara tu historia, ¿qué le dirías? ¿Qué compasión le ofrecerías? Ahora, ¿puedes darte esa misma compasión a ti?</p>
-                <textarea data-exercise="mod6-ex5" placeholder="Me merezco compasión porque..."></textarea>
-            </div>
-            
-            <div class="exercise-box">
-                <h4>✍️ Ejercicio 6: Transformando el Dolor en Sabiduría</h4>
-                <p>¿Qué has aprendido de tus heridas? ¿Qué fortaleza, compasión o sabiduría has desarrollado a través de tu dolor?</p>
-                <textarea data-exercise="mod6-ex6" placeholder="Mis heridas me han enseñado..."></textarea>
-                <div class="exercise-hint">💡 Esto no justifica el dolor, pero reconoce que no fue en vano. Tu dolor puede transformarse en medicina para otros.</div>
-            </div>
-        `
-    },
-    {
-        id: 7,
-        title: 'Módulo 7: El Perdón',
-        content: `
-            <h2>Módulo 7: El Perdón</h2>
-            
-            <h3>Liberándote del Resentimiento</h3>
-            
-            <p>El perdón es quizás el concepto más malentendido en el proceso de sanación. No es olvidar. No es justificar. No es reconciliarse. No es ser débil o ingenuo.</p>
-            
-            <p>El perdón es soltar. Es dejar de cargar con el veneno del resentimiento. Es reconocer que mientras sigas aferrado a la rabia contra quien te hirió, esa persona sigue controlando tu vida.</p>
-            
-            <p>Como dice el proverbio: "Guardar resentimiento es como tomar veneno y esperar que el otro muera." El resentimiento te envenena a ti, no a quien te hirió.</p>
-            
-            <div class="story-box">
-                <h4>💭 La historia de Diego</h4>
-                <p>El padre de Diego era alcohólico. Durante toda su infancia, Diego vivió con el terror de no saber qué versión de su padre llegaría a casa: el amoroso y divertido, o el violento y cruel.</p>
-                <p>Una noche, cuando Diego tenía 12 años, su padre llegó borracho y golpeó a su madre tan severamente que tuvo que ser hospitalizada. Diego llamó a la policía. Su padre fue arrestado. Su madre finalmente se divorció.</p>
-                <p>Diego creció cargando una rabia inmensa contra su padre. "Lo odio", decía. "Nunca lo perdonaré. No merece mi perdón." Y tenía razón en muchos sentidos: su padre no merecía perdón. Lo que había hecho era imperdonable.</p>
-                <p>Pero a los 35 años, Diego se dio cuenta de algo: su padre, que había muerto 5 años atrás, ya no estaba. Pero Diego seguía cargando su rabia. Seguía reviviendo esas noches terribles. Seguía dejando que su padre muerto controlara sus emociones, sus relaciones, su paz.</p>
-                <p>El perdón de Diego no fue para su padre. Fue para él mismo. No justificó el abuso. No olvidó lo que pasó. Simplemente decidió soltar el veneno del resentimiento que lo estaba destruyendo.</p>
-                <p>"Perdonar a mi padre", dijo Diego, "fue reconocer que era un hombre profundamente enfermo, roto por su propio dolor. Esto no justifica lo que hizo, pero me ayuda a soltar. A dejar de cargar su peso. A liberarme."</p>
-            </div>
-            
-            <h3>Lo Que el Perdón NO Es</h3>
-            <ul>
-                <li>No es olvidar o pretender que no pasó</li>
-                <li>No es justificar o excusar el daño</li>
-                <li>No es reconciliarse con quien te hirió</li>
-                <li>No es permitir que te sigan dañando</li>
-                <li>No es debilidad o ingenuidad</li>
-            </ul>
-            
-            <h3>Lo Que el Perdón SÍ Es</h3>
-            <ul>
-                <li>Soltar el resentimiento que te envenena</li>
-                <li>Dejar de darle poder a quien te hirió</li>
-                <li>Liberarte de la prisión del odio</li>
-                <li>Reconocer la humanidad imperfecta de todos, incluyéndote</li>
-                <li>Elegir tu paz sobre tu razón</li>
-            </ul>
-            
-            <div class="exercise-box">
-                <h4>✍️ Ejercicio 1: ¿A Quién Necesitas Perdonar?</h4>
-                <p>Haz una lista de las personas que te han herido y contra quienes sientes resentimiento. Incluye también a ti mismo/a si es necesario.</p>
-                <textarea data-exercise="mod7-ex1" placeholder="Las personas que necesito perdonar son..."></textarea>
-            </div>
-            
-            <div class="exercise-box">
-                <h4>✍️ Ejercicio 2: El Peso del Resentimiento</h4>
-                <p>¿Cómo te ha afectado cargar con este resentimiento? ¿Qué te ha costado en términos de paz, energía, relaciones, salud?</p>
-                <textarea data-exercise="mod7-ex2" placeholder="Mi resentimiento me ha costado..."></textarea>
-                <div class="exercise-hint">💡 El resentimiento es un veneno que tomas tú, esperando que enferme al otro.</div>
-            </div>
-            
-            <div class="exercise-box">
-                <h4>✍️ Ejercicio 3: Comprendiendo (No Justificando)</h4>
-                <p>Intenta entender (sin justificar) por qué la persona que te hirió actuó como lo hizo. ¿Qué dolor, heridas o limitaciones tenía esa persona?</p>
-                <textarea data-exercise="mod7-ex3" placeholder="Esa persona actuó así porque..."></textarea>
-                <div class="exercise-hint">💡 Personas heridas hieren a otros. Esto no justifica el daño, pero ayuda a soltar el veneno.</div>
-            </div>
-            
-            <div class="exercise-box">
-                <h4>✍️ Ejercicio 4: Carta de Perdón</h4>
-                <p>Escribe una carta de perdón (que no tienes que enviar). No para justificar lo que pasó, sino para liberarte del peso.</p>
-                <textarea data-exercise="mod7-ex4" placeholder="Elijo perdonarte porque...\"></textarea>
-            </div>
-            
-            <div class="exercise-box">
-                <h4>✍️ Ejercicio 5: Perdón a Ti Mismo/a</h4>
-                <p>¿Qué necesitas perdonarte a ti mismo/a? ¿Por qué errores, decisiones o acciones sigues castigándote?</p>
-                <textarea data-exercise="mod7-ex5" placeholder="Necesito perdonarme por..."></textarea>
-                <div class="exercise-hint">💡 A menudo somos nuestro juez más severo. Date la compasión que le darías a un amigo.</div>
-            </div>
-            
-            <div class="exercise-box">
-                <h4>✍️ Ejercicio 6: El Ritual de Soltar</h4>
-                <p>¿Qué ritual o acción simbólica podrías hacer para soltar el resentimiento? (quemar una carta, soltar un globo, plantar algo nuevo, etc.)</p>
-                <textarea data-exercise="mod7-ex6" placeholder="Mi ritual de soltar será..."></textarea>
-                <div class="exercise-hint">💡 Los rituales simbólicos ayudan al inconsciente a procesar el cambio.</div>
-            </div>
-        `
-    },
-    {
-        id: 8,
-        title: 'Módulo 8: La Gratitud',
-        content: `
-            <h2>Módulo 8: La Gratitud</h2>
-            
-            <h3>Cultivando una Nueva Forma de Ver la Vida</h3>
-            
-            <p>Después de todo el trabajo profundo que has hecho, bajando al socavón, quitándote las máscaras, enfrentando tu sombra, sanando a tu niño interior, desmantelando creencias limitantes, reconociendo heridas y perdonando, ahora llega un cambio fundamental en la perspectiva: la gratitud.</p>
-            
-            <p>La gratitud no es pensamiento positivo superficial. No es negar el dolor o fingir que todo está bien. La gratitud es la capacidad de encontrar lo sagrado en lo ordinario, de reconocer los regalos en medio del caos, de elegir qué parte de tu realidad decides alimentar con tu atención.</p>
-            
-            <p>Como dice la sabiduría antigua: dentro de ti hay dos lobos, uno de gratitud y esperanza, otro de resentimiento y miedo. ¿Cuál gana? El que alimentas.</p>
-            
-            <div class="story-box">
-                <h4>💭 La historia de Elena</h4>
-                <p>Elena había pasado dos años en un proceso profundo de sanación después de un divorcio devastador y la pérdida de su trabajo. Había hecho todo el trabajo interno: terapia, auto-conocimiento, enfrentar sus sombras.</p>
-                <p>Pero aún se sentía atrapada en una narrativa de víctima. Su historia era: "Mi ex me destruyó. Mi jefe me traicionó. La vida ha sido injusta conmigo." Y aunque había verdad en esto, esta narrativa la mantenía paralizada.</p>
-                <p>Un día, su terapeuta le dio un ejercicio simple pero poderoso: durante 30 días, escribir cada noche tres cosas por las que estaba agradecida ese día.</p>
-                <p>Los primeros días, Elena luchaba. "¿Agradecida? ¿De qué?" Pero lentamente, comenzó a notar cosas pequeñas: el café caliente en la mañana, una conversación honesta con una amiga, el sol en su rostro durante un paseo.</p>
-                <p>Algo comenzó a cambiar. Elena se dio cuenta de que la gratitud no negaba su dolor, pero sí cambiaba su enfoque. En lugar de obsesionarse con lo que había perdido, comenzó a notar lo que estaba presente. Y lentamente, su energía cambió. Su narrativa cambió.</p>
-                <p>"Sí", se dijo, "pasé por cosas terribles. Pero también sobreviví. También crecí. También tengo la oportunidad de crear algo nuevo." La gratitud no boró su dolor, pero le dio acceso a una perspectiva más amplia.</p>
-            </div>
-            
-            <h3>La Ciencia de la Gratitud</h3>
-            <p>La investigación muestra que practicar gratitud conscientemente:</p>
-            <ul>
-                <li>Reduce depresión y ansiedad</li>
-                <li>Mejora la calidad del sueño</li>
-                <li>Fortalece el sistema inmunológico</li>
-                <li>Aumenta la resiliencia ante adversidades</li>
-                <li>Mejora las relaciones interpersonales</li>
-                <li>Incrementa la sensación general de bienestar</li>
-            </ul>
-            
-            <div class="exercise-box">
-                <h4>✍️ Ejercicio 1: Gratitud por lo Básico</h4>
-                <p>Haz una lista de las cosas básicas de tu vida por las que estás agradecido/a (salud, techo, comida, personas, capacidades, etc.)</p>
-                <textarea data-exercise="mod8-ex1" placeholder="Estoy agradecido/a por..."></textarea>
-                <div class="exercise-hint">💡 A menudo damos por sentado lo esencial hasta que lo perdemos.</div>
-            </div>
-            
-            <div class="exercise-box">
-                <h4>✍️ Ejercicio 2: Gratitud por las Dificultades</h4>
-                <p>¿Qué dificultades o desafíos de tu vida, en retrospectiva, te han traído crecimiento o regalos inesperados?</p>
-                <textarea data-exercise="mod8-ex2" placeholder="Estoy agradecido/a por estas dificultades porque..."></textarea>
-                <div class="exercise-hint">💡 Esto no justifica el dolor, pero reconoce su potencial transformador.</div>
-            </div>
-            
-            <div class="exercise-box">
-                <h4>✍️ Ejercicio 3: Gratitud por las Personas</h4>
-                <p>¿Quiénes son las personas que han marcado positivamente tu vida? ¿Qué te han dado?</p>
-                <textarea data-exercise="mod8-ex3" placeholder="Estoy agradecido/a por estas personas..."></textarea>
-            </div>
-            
-            <div class="exercise-box">
-                <h4>✍️ Ejercicio 4: Gratitud por Ti Mismo/a</h4>
-                <p>¿Por qué aspectos, cualidades o fortalezas tuyas estás agradecido/a? ¿Qué te ha ayudado a sobrevivir y crecer?</p>
-                <textarea data-exercise="mod8-ex4" placeholder="Estoy agradecido/a de mí mismo/a por..."></textarea>
-                <div class="exercise-hint">💡 La auto-gratitud no es narcisismo. Es reconocer tu valor y tu esfuerzo.</div>
-            </div>
-            
-            <div class="exercise-box">
-                <h4>✍️ Ejercicio 5: Práctica Diaria de Gratitud</h4>
-                <p>Comprométete a una práctica diaria: cada noche, escribe 3 cosas por las que estuviste agradecido/a ese día. Empieza hoy. ¿Cuáles son las 3 de hoy?</p>
-                <textarea data-exercise="mod8-ex5" placeholder="Hoy estoy agradecido/a por..."></textarea>
-                <div class="exercise-hint">💡 La gratitud es como un músculo. Se fortalece con práctica constante.</div>
-            </div>
-            
-            <div class="exercise-box">
-                <h4>✍️ Ejercicio 6: Cartas de Gratitud</h4>
-                <p>Elige a una persona que haya impactado positivamente tu vida. Escribe una carta de gratitud detallando específicamente qué te dio y cómo te impactó. ¿Le enviarás esta carta?</p>
-                <textarea data-exercise="mod8-ex6" placeholder="Querido/a..., quiero agradecerte por..."></textarea>
-                <div class="exercise-hint">💡 Expresar gratitud a otros no solo los bendice a ellos, te transforma a ti.</div>
-            </div>
-        `
-    },
-    {
-        id: 9,
-        title: 'Módulo 9: Tu Nuevo Yo',
-        content: `
-            <h2>Módulo 9: Construyendo Tu Nuevo Yo</h2>
-            
-            <p>Has hecho un trabajo profundo. Has bajado al socavón, has quitado las máscaras, has enfrentado tu sombra, has abrazado a tu niño interior, has cuestionado tus creencias, has reconocido tus heridas, has perdonado, has encontrado gratitud.</p>
-            
-            <p>Ahora viene la pregunta más importante: ¿Quién quieres ser?</p>
-            
-            <p>No quién crees que deberías ser. No quién otros esperan que seas. Sino quién REALMENTE quieres ser cuando te quitas todas las capas de condicionamiento, expectativas y miedo.</p>
-            
-            <div class="story-box">
-                <h4>💭 La historia de Carmen</h4>
-                <p>Carmen había pasado 50 años viviendo la vida que otros diseñaron para ella. Estudió medicina porque su padre era médico. Se casó joven porque "era lo que esperaba". Tuvo tres hijos porque "eso es lo que hacen las mujeres". Pero nunca se preguntó qué quería ella.</p>
-                <p>Después de su divorcio, en su pequeño apartamento, Carmen se miró al espejo y se preguntó: "¿Quién eres tú, Carmen? No la doctora, no la ex esposa, no la madre. ¿Quién ERES?"</p>
-                <p>La respuesta no llegó de inmediato. Pero empezó a explorar. Tomó clases de pintura (algo que siempre había querido pero nunca "tuvo tiempo"). Viajó sola por primera vez en su vida. Se permitió cometer "errores" y experimentar.</p>
-                <p>Poco a poco, descubrió a Carmen. No la Carmen que otros esperaban, sino la Carmen auténtica. Le gustaba el silencio de las mañanas, la libertad de no tener horarios rígidos, la creatividad que siempre había sofocado. Era más introvertida de lo que aparentaba, más artística de lo que se permitía, más salvaje de lo que se creía permitido ser.</p>
-                <p>Hoy, a sus 52 años, Carmen finalmente está viviendo SU vida. Y dice que nunca ha sido más feliz.</p>
-            </div>
-            
-            <h3>Tu Nuevo Yo</h3>
-            <p>Si pudieras diseñar tu vida sin limitaciones, sin miedo al juicio de otros, sin cargar el pasado... ¿quién serías? ¿Cómo vivirías?</p>
-            
-            <div class="exercise-box">
-                <h4>✍️ Ejercicio 1: Diseña tu nuevo yo</h4>
-                <p>Describe con detalle quién quieres ser. ¿Cómo es tu vida ideal? ¿Qué valores son importantes para ti? ¿Cómo te sientes? ¿Cómo te relacionas con otros? Escribe sin limitaciones.</p>
-                <textarea data-exercise="mod9-ex1" placeholder="Mi nuevo yo es..."></textarea>
-                <div class="exercise-hint">💡 No te limites por lo que crees posible. Primero imagina, luego ya veremos cómo.</div>
-            </div>
-            
-            <div class="exercise-box">
-                <h4>✍️ Ejercicio 2: Tus Valores Esenciales</h4>
-                <p>¿Cuáles son los 5 valores más importantes para ti? (autenticidad, libertad, amor, creatividad, justicia, crecimiento, etc.)</p>
-                <textarea data-exercise="mod9-ex2" placeholder="Mis valores esenciales son..."></textarea>
-                <div class="exercise-hint">💡 Estos valores serán tu brújula para tomar decisiones.</div>
-            </div>
-            
-            <div class="exercise-box">
-                <h4>✍️ Ejercicio 3: Tu Día Ideal</h4>
-                <p>Describe tu día ideal desde que despiertas hasta que duermes. ¿Cómo es? ¿Qué haces? ¿Cómo te sientes? ¿Con quién estás?</p>
-                <textarea data-exercise="mod9-ex3" placeholder="Mi día ideal es..."></textarea>
-            </div>
-            
-            <div class="exercise-box">
-                <h4>✍️ Ejercicio 4: Relaciones Auténticas</h4>
-                <p>¿Cómo quieres relacionarte con las personas desde tu nuevo yo? ¿Qué tipo de relaciones quieres cultivar? ¿Qué límites necesitas establecer?</p>
-                <textarea data-exercise="mod9-ex4" placeholder="En mis relaciones, quiero..."></textarea>
-            </div>
-            
-            <div class="exercise-box">
-                <h4>✍️ Ejercicio 5: Tu Contribución</h4>
-                <p>¿Cómo quieres contribuir al mundo desde tu nuevo yo? ¿Qué regalo único tienes para ofrecer?</p>
-                <textarea data-exercise="mod9-ex5" placeholder="Mi contribución al mundo es..."></textarea>
-                <div class="exercise-hint">💡 Tu dolor sanado puede convertirse en medicina para otros.</div>
-            </div>
-            
-            <div class="exercise-box">
-                <h4>✍️ Ejercicio 6: La Brecha Entre Quién Eres y Quién Quieres Ser</h4>
-                <p>¿Qué brecha existe entre quién eres ahora y quién quieres ser? ¿Qué necesita cambiar? ¿Qué necesitas soltar? ¿Qué necesitas cultivar?</p>
-                <textarea data-exercise="mod9-ex6" placeholder="Para ser mi nuevo yo, necesito..."></textarea>
-            </div>
-        `
-    },
-    {
-        id: 10,
-        title: 'Módulo 10: El Plan de Acción',
-        content: `
-            <h2>Módulo 10: El Plan de Acción</h2>
-            
-            <h3>Creando un Camino Concreto Hacia Tu Transformación</h3>
-            
-            <p>Has hecho un viaje profundo de auto-conocimiento. Has explorado tus sombras, has sanado heridas, has rediseñado quién quieres ser. Pero el conocimiento sin acción es solo filosofía. La transformación real requiere pasos concretos.</p>
-            
-            <p>Este módulo final es donde conviertes todo lo que has descubierto en un plan de acción práctico. No un plan perfecto o rígido, sino un mapa flexible que te guíe desde donde estás hacia donde quieres ir.</p>
-            
-            <h3>Los Principios de un Buen Plan de Acción</h3>
-            <ul>
-                <li><strong>Empieza pequeño:</strong> Cambios radicales rara vez funcionan. Pequeños pasos consistentes sí.</li>
-                <li><strong>Sé específico:</strong> "Quiero ser más auténtico" es vago. "Voy a expresar una opinión honesta en cada reunión" es concreto.</li>
-                <li><strong>Anticipa resistencia:</strong> Tu psique se resistirá al cambio. Es normal.</li>
-                <li><strong>Ten apoyo:</strong> La transformación en soledad es mucho más difícil.</li>
-                <li><strong>Celebra el progreso:</strong> No esperes la perfección. Cada paso cuenta.</li>
-                <li><strong>Sé compasivo:</strong> Habrá recaidas. No son fracasos, son parte del proceso.</li>
-            </ul>
-            
-            <div class="exercise-box">
-                <h4>✍️ Ejercicio 1: Tu Visión a Un Año</h4>
-                <p>Dentro de un año, si este proceso de transformación ha sido exitoso, ¿cómo es tu vida? ¿Qué ha cambiado? Sé específico.</p>
-                <textarea data-exercise="mod10-ex1" placeholder="Dentro de un año, mi vida es..."></textarea>
-                <div class="exercise-hint">💡 La claridad en la visión ayuda a crear el camino.</div>
-            </div>
-            
-            <div class="exercise-box">
-                <h4>✍️ Ejercicio 2: Primeros Pasos Concretos</h4>
-                <p>¿Cuáles son los 3 primeros pasos concretos que puedes tomar ESTA SEMANA para moverte hacia tu nuevo yo?</p>
-                <textarea data-exercise="mod10-ex2" placeholder="Esta semana voy a..."></textarea>
-                <div class="exercise-hint">💡 Asegúrate de que sean acciones concretas, no solo intenciones.</div>
-            </div>
-            
-            <div class="exercise-box">
-                <h4>✍️ Ejercicio 3: Obstáculos Anticipados</h4>
-                <p>¿Qué obstáculos internos (miedos, resistencia, auto-sabotaje) o externos (tiempo, recursos, personas) podrían dificultar tu transformación?</p>
-                <textarea data-exercise="mod10-ex3" placeholder="Los obstáculos que anticipo son..."></textarea>
-            </div>
-            
-            <div class="exercise-box">
-                <h4>✍️ Ejercicio 4: Estrategias para Obstáculos</h4>
-                <p>Para cada obstáculo que identificaste, ¿qué estrategia podrías usar para manejarlo o superarlo?</p>
-                <textarea data-exercise="mod10-ex4" placeholder="Cuando enfrente estos obstáculos, voy a..."></textarea>
-                <div class="exercise-hint">💡 Tener un plan para la resistencia hace que sea menos probable que te detenga.</div>
-            </div>
-            
-            <div class="exercise-box">
-                <h4>✍️ Ejercicio 5: Tu Sistema de Apoyo</h4>
-                <p>¿Quién puede apoyarte en este proceso? ¿Qué recursos necesitas? (terapia, grupos de apoyo, mentor, amigos, libros, etc.)</p>
-                <textarea data-exercise="mod10-ex5" placeholder="Mi sistema de apoyo incluye..."></textarea>
-            </div>
-            
-            <div class="exercise-box">
-                <h4>✍️ Ejercicio 6: Hábitos y Rituales Diarios</h4>
-                <p>¿Qué hábitos o rituales diarios podrías establecer para mantener tu transformación? (meditación, escritura, ejercicio, tiempo en naturaleza, etc.)</p>
-                <textarea data-exercise="mod10-ex6" placeholder="Mis hábitos diarios serán..."></textarea>
-                <div class="exercise-hint">💡 La transformación no es un evento, es una práctica diaria.</div>
-            </div>
-            
-            <div class="exercise-box">
-                <h4>✍️ Ejercicio 7: Tu Compromiso Final</h4>
-                <p>Escribe un compromiso final contigo mismo/a. ¿Qué promesa te haces sobre cómo vivirás de ahora en adelante?</p>
-                <textarea data-exercise="mod10-ex7" placeholder="Me comprometo a..."></textarea>
-            </div>
-            
-            <div class="completion-badge">
-                ✨ ¡Felicitaciones! Has completado el viaje. Pero recuerda: esto no es un final, es un comienzo. La transformación real sucede en cómo vives cada día de ahora en adelante. ✨
-            </div>
-        `
-    }
+  {
+    id: 0,
+    label: 'Bienvenida',
+    title: 'Tu Viaje de Transformación',
+    content: () => `
+      <p>Has tomado una decisión valiente: embarcarte en el viaje más importante de tu vida, el viaje hacia tu interior. Este no es un camino fácil, pero es el único que realmente transforma.</p>
+      <p>Durante este proceso vas a descubrir partes de ti que quizás habías olvidado o nunca conociste. Vas a enfrentar sombras, quitarte máscaras y sanar heridas profundas. Pero también vas a encontrar tu luz, tu autenticidad, tu poder interior.</p>
+
+      <div class="quote-box">
+        <p>"El viaje más largo es el viaje hacia adentro." — Dag Hammarskjöld</p>
+      </div>
+
+      <h3>¿Cómo funciona este proceso?</h3>
+      <p>Este viaje está dividido en 10 módulos. Cada uno representa una etapa esencial de tu transformación:</p>
+
+      <div class="module-list">
+        <div class="module-pill"><span>✦</span> El Socavón</div>
+        <div class="module-pill"><span>✦</span> Las Máscaras</div>
+        <div class="module-pill"><span>✦</span> La Sombra</div>
+        <div class="module-pill"><span>✦</span> El Niño Interior</div>
+        <div class="module-pill"><span>✦</span> Creencias Limitantes</div>
+        <div class="module-pill"><span>✦</span> Las Heridas</div>
+        <div class="module-pill"><span>✦</span> El Perdón</div>
+        <div class="module-pill"><span>✦</span> La Gratitud</div>
+        <div class="module-pill"><span>✦</span> Tu Nueva Yo</div>
+        <div class="module-pill"><span>✦</span> El Plan de Acción</div>
+      </div>
+
+      <h3>Antes de empezar</h3>
+      <p>Este proceso requiere honestidad radical contigo misma. No hay respuestas correctas o incorrectas. Solo hay <em>tu</em> verdad.</p>
+      <p>Cada módulo incluye ejercicios prácticos. Tómate el tiempo que necesites para completarlos con profundidad. La transformación real sucede en el trabajo interno, no en la lectura superficial.</p>
+
+      <div class="exercise-box">
+        <h4><span class="ex-num">✍</span> Compromiso Inicial</h4>
+        <p>Antes de comenzar, escribe tu compromiso contigo misma. ¿Por qué estás aquí? ¿Qué esperas lograr con este viaje?</p>
+        <textarea data-exercise="welcome-commitment" placeholder="Mi compromiso es..."></textarea>
+        <div class="exercise-hint">💡 Sé específica. Este compromiso será tu ancla cuando el proceso se ponga difícil.</div>
+      </div>
+    `
+  },
+  {
+    id: 1,
+    label: 'Módulo 1',
+    title: 'El Socavón',
+    content: () => `
+      <h3>Reconociendo Tu Crisis</h3>
+      <p>Hay momentos en la vida en que el suelo se abre bajo nuestros pies. De repente, todo lo que creíamos sólido se desmorona. La relación que pensábamos eterna termina. El trabajo que definía nuestra identidad desaparece. La salud que dábamos por sentada nos falla.</p>
+      <p>Esto es el socavón: ese momento de crisis profunda donde todo lo conocido se derrumba y nos encontramos caídas en la oscuridad, sin saber cómo salir.</p>
+
+      <div class="story-box">
+        <div class="story-label">✦ Historia real</div>
+        <h4>La historia de Camila</h4>
+        <p>Camila tenía 35 años cuando su mundo se derrumbó. Después de 12 años de matrimonio, su esposo le confesó que había estado viviendo una doble vida. El socavón de Camila no fue solo el fin de su matrimonio. Fue el colapso de toda su identidad.</p>
+        <p>Durante meses, apenas podía levantarse de la cama. Pero el socavón, aunque doloroso, fue el comienzo de su verdadera transformación. Porque en la oscuridad de ese abismo, Camila finalmente tuvo que preguntarse: <em>¿Quién soy yo sin este matrimonio? ¿Quién soy yo más allá del papel que desempeñaba?</em></p>
+      </div>
+
+      <p>El socavón es doloroso, pero también es sagrado. Es el momento en que la vida nos obliga a despertar. Es la invitación, aunque brutal, a dejar de vivir en automático y comenzar a vivir conscientemente.</p>
+
+      <h3>Las Señales del Socavón</h3>
+      <ul>
+        <li>Despertar cada mañana con una sensación de vacío, aunque tu vida "debería" hacerte feliz</li>
+        <li>Sentir que estás representando un papel, pero no sabes quién eres realmente</li>
+        <li>Una ansiedad constante que no logras explicar</li>
+        <li>La sensación de estar viviendo la vida que otros esperan de ti, no la tuya</li>
+        <li>Relaciones que se sienten vacías, aunque estés rodeada de gente</li>
+        <li>Logros que no te dan la satisfacción que esperabas</li>
+      </ul>
+
+      <div class="exercise-box">
+        <h4><span class="ex-num">1</span> Identificando Tu Socavón</h4>
+        <p>¿Cuál fue o es tu socavón? Describe la situación o momento en que sentiste que todo se derrumbaba.</p>
+        <textarea data-exercise="mod1-ex1" placeholder="Mi socavón fue..."></textarea>
+        <div class="exercise-hint">💡 No te censures. Escribe sin filtros. Nadie más va a leer esto.</div>
+      </div>
+      <div class="exercise-box">
+        <h4><span class="ex-num">2</span> Las Emociones del Socavón</h4>
+        <p>¿Qué emociones estás sintiendo o sentiste? Nombra todas las que puedas identificar: miedo, rabia, tristeza, culpa, vergüenza, confusión...</p>
+        <textarea data-exercise="mod1-ex2" placeholder="Las emociones que siento/sentí son..."></textarea>
+        <div class="exercise-hint">💡 Nombrar las emociones es el primer paso para procesarlas. No intentes ser "positiva" todavía.</div>
+      </div>
+      <div class="exercise-box">
+        <h4><span class="ex-num">3</span> Las Pérdidas</h4>
+        <p>¿Qué has perdido o sientes que estás perdiendo? Pueden ser cosas concretas o abstractas: seguridad, identidad, confianza...</p>
+        <textarea data-exercise="mod1-ex3" placeholder="He perdido o estoy perdiendo..."></textarea>
+      </div>
+      <div class="exercise-box">
+        <h4><span class="ex-num">4</span> La Resistencia</h4>
+        <p>¿De qué maneras has intentado evitar o negar tu socavón? ¿Cómo has tratado de escapar del dolor?</p>
+        <textarea data-exercise="mod1-ex4" placeholder="He intentado evitar mi dolor mediante..."></textarea>
+        <div class="exercise-hint">💡 La resistencia es natural. Reconocerla es valiente.</div>
+      </div>
+      <div class="exercise-box">
+        <h4><span class="ex-num">5</span> El Regalo Oculto</h4>
+        <p>Aunque ahora parezca imposible, todos los socavones traen un regalo: la oportunidad de transformación. ¿Puedes imaginar, aunque sea vagamente, qué podría surgir de esta crisis?</p>
+        <textarea data-exercise="mod1-ex5" placeholder="El posible regalo de mi socavón podría ser..."></textarea>
+        <div class="exercise-hint">💡 Está bien si aún no ves nada positivo. Solo permite la posibilidad de que exista.</div>
+      </div>
+    `
+  },
+  {
+    id: 2,
+    label: 'Módulo 2',
+    title: 'Las Máscaras',
+    content: () => `
+      <h3>Las Identidades Falsas que Construimos</h3>
+      <p>Desde muy temprano en la vida, aprendemos que mostrar quiénes somos realmente no es seguro. Cuando nuestras necesidades auténticas son ignoradas o ridiculizadas, aprendemos una lección dolorosa: <em>ser yo misma no es aceptable</em>.</p>
+      <p>Entonces comenzamos a usar máscaras. Construimos personajes que creemos que serán más aceptables, más amados, más exitosos. Estas máscaras nos protegen, pero también nos aprisionan.</p>
+
+      <div class="story-box">
+        <div class="story-label">✦ Historia real</div>
+        <h4>La historia de Roberto</h4>
+        <p>Roberto construyó una máscara de fortaleza. Se volvió "el fuerte", el que nunca mostraba debilidad. Esta máscara le sirvió bien en muchos sentidos, pero a los 40 años su esposa le pidió el divorcio.</p>
+        <p>"Vivo contigo, pero no te conozco", le dijo. "Nunca sé qué sientes realmente. Es como vivir con una estatua."</p>
+        <p>Roberto se dio cuenta de que había usado su máscara durante tanto tiempo que ya no sabía qué había debajo.</p>
+      </div>
+
+      <h3>Las Máscaras Más Comunes</h3>
+      <ul>
+        <li><strong>La Perfeccionista:</strong> "Si lo hago todo perfecto, seré amada y aceptada"</li>
+        <li><strong>La Complaciente:</strong> "Si hago felices a todas, nadie me abandonará"</li>
+        <li><strong>La Fuerte:</strong> "Si nunca muestro debilidad, estaré a salvo"</li>
+        <li><strong>La Exitosa:</strong> "Si tengo éxito, valdré algo"</li>
+        <li><strong>La Alegre:</strong> "Si siempre estoy positiva, nadie verá mi dolor"</li>
+        <li><strong>La Cuidadora:</strong> "Si cuido de todas, seré necesaria y no me abandonarán"</li>
+        <li><strong>La Rebelde:</strong> "Si rechazo todo, nadie podrá herirme"</li>
+        <li><strong>La Víctima:</strong> "Si muestro cuánto sufro, alguien vendrá a rescatarme"</li>
+      </ul>
+
+      <div class="exercise-box">
+        <h4><span class="ex-num">1</span> Identificando Tus Máscaras</h4>
+        <p>¿Qué máscaras has usado en tu vida? De la lista anterior u otras que identifiques, ¿cuáles reconoces en ti?</p>
+        <textarea data-exercise="mod2-ex1" placeholder="Las máscaras que he usado son..."></textarea>
+        <div class="exercise-hint">💡 La mayoría usamos varias máscaras en diferentes contextos. Sé honesta.</div>
+      </div>
+      <div class="exercise-box">
+        <h4><span class="ex-num">2</span> ¿Cómo Construiste Tus Máscaras?</h4>
+        <p>¿Cuándo y cómo aprendiste a usar esas máscaras? ¿Qué situaciones de tu infancia te enseñaron que no era seguro ser tú misma?</p>
+        <textarea data-exercise="mod2-ex2" placeholder="Aprendí a usar máscaras cuando..."></textarea>
+      </div>
+      <div class="exercise-box">
+        <h4><span class="ex-num">3</span> El Precio de las Máscaras</h4>
+        <p>¿Qué te han costado estas máscaras? ¿Qué has sacrificado por mantenerlas?</p>
+        <textarea data-exercise="mod2-ex3" placeholder="Mis máscaras me han costado..."></textarea>
+      </div>
+      <div class="exercise-box">
+        <h4><span class="ex-num">4</span> Momentos Sin Máscara</h4>
+        <p>¿Recuerdas algún momento en que te quitaste la máscara y mostraste quién eres realmente? ¿Qué pasó? ¿Cómo te sentiste?</p>
+        <textarea data-exercise="mod2-ex4" placeholder="Un momento sin máscara fue..."></textarea>
+        <div class="exercise-hint">💡 Estos momentos nos muestran qué es posible cuando somos auténticas.</div>
+      </div>
+      <div class="exercise-box">
+        <h4><span class="ex-num">5</span> El Miedo a Quitarte la Máscara</h4>
+        <p>¿Qué temes que pasaría si te quitaras tus máscaras? ¿Qué es lo peor que podría suceder?</p>
+        <textarea data-exercise="mod2-ex5" placeholder="Si me quitara mis máscaras, temo que..."></textarea>
+        <div class="exercise-hint">💡 Nombrar el miedo es el primer paso para desarmarlo.</div>
+      </div>
+      <div class="exercise-box">
+        <h4><span class="ex-num">6</span> ¿Quién Eres Sin la Máscara?</h4>
+        <p>Debajo de todas tus máscaras, ¿quién eres? ¿Qué partes de ti has estado ocultando?</p>
+        <textarea data-exercise="mod2-ex6" placeholder="Sin mis máscaras, yo soy..."></textarea>
+        <div class="exercise-hint">💡 Está bien si aún no lo sabes completamente. Este es solo el comienzo.</div>
+      </div>
+    `
+  },
+  {
+    id: 3,
+    label: 'Módulo 3',
+    title: 'La Sombra',
+    content: () => `
+      <h3>Enfrentando Lo Que Hemos Rechazado</h3>
+      <p>Carl Jung lo explicó claramente: la sombra es todo aquello en nosotras que hemos rechazado, negado o reprimido porque lo consideramos inaceptable. La ironía es que mientras más rechazamos nuestra sombra, más poder tiene sobre nosotras.</p>
+
+      <div class="story-box">
+        <div class="story-label">✦ Historia real</div>
+        <h4>La historia de Sofía</h4>
+        <p>Sofía se enorgullecía de ser "la buena". Nunca se enojaba, siempre era amable, siempre ponía las necesidades de otras primero. Pero Sofía tenía un secreto que ni siquiera se confesaba a sí misma: estaba llena de rabia.</p>
+        <p>Esta rabia era su sombra. Y como la rechazaba, encontraba formas indirectas de salir: comentarios pasivo-agresivos, enfermedades psicosomáticas, explosiones desproporcionadas por cosas pequeñas. Cuando finalmente se permitió sentir esa rabia, algo sorprendente sucedió: se sintió más completa, más real, más humana.</p>
+      </div>
+
+      <h3>¿Cómo Reconocer Tu Sombra?</h3>
+      <ul>
+        <li><strong>Lo que más criticas en otras:</strong> A menudo, lo que más nos irrita en los demás son aspectos de nosotras mismas que hemos reprimido.</li>
+        <li><strong>Tus "pecados secretos":</strong> Esos pensamientos o deseos que te avergüenzan.</li>
+        <li><strong>Tus reacciones desproporcionadas:</strong> Cuando respondes con una intensidad que no corresponde a la situación.</li>
+        <li><strong>Lo que niegas rotundamente:</strong> "Yo NUNCA soy..." La negación rotunda suele señalar sombra.</li>
+      </ul>
+
+      <div class="exercise-box">
+        <h4><span class="ex-num">1</span> ¿Qué Rechazas de Ti?</h4>
+        <p>¿Qué aspectos de ti misma consideras inaceptables? ¿Qué partes te avergüenzan o asustan?</p>
+        <textarea data-exercise="mod3-ex1" placeholder="Los aspectos que rechazo de mí son..."></textarea>
+        <div class="exercise-hint">💡 Este es un ejercicio de honestidad radical. Lo que reconoces pierde poder sobre ti.</div>
+      </div>
+      <div class="exercise-box">
+        <h4><span class="ex-num">2</span> El Espejo de las Otras</h4>
+        <p>¿Qué es lo que más te irrita o juzgas en otras personas? Haz una lista. Luego pregúntate: ¿existe algo de eso en mí, aunque sea disfrazado?</p>
+        <textarea data-exercise="mod3-ex2" placeholder="Lo que más me irrita en otras es..."></textarea>
+      </div>
+      <div class="exercise-box">
+        <h4><span class="ex-num">3</span> Secretos Vergonzosos</h4>
+        <p>¿Qué pensamientos o deseos tuyos te avergüenzan? ¿Qué no quisieras que nadie supiera de ti?</p>
+        <textarea data-exercise="mod3-ex3" placeholder="Lo que guardo con vergüenza es..."></textarea>
+        <div class="exercise-hint">💡 Lo que traes a la luz pierde su poder oscuro.</div>
+      </div>
+      <div class="exercise-box">
+        <h4><span class="ex-num">4</span> Reacciones Desproporcionadas</h4>
+        <p>¿Recuerdas situaciones donde reaccionaste con una intensidad emocional que no correspondía? ¿Qué botón se activó en ti?</p>
+        <textarea data-exercise="mod3-ex4" placeholder="Reaccioné desproporcionadamente cuando..."></textarea>
+      </div>
+      <div class="exercise-box">
+        <h4><span class="ex-num">5</span> Diálogo con Tu Sombra</h4>
+        <p>Imagina que puedes hablar con esa parte rechazada de ti. ¿Qué te diría? ¿Qué necesita? ¿Por qué existe?</p>
+        <textarea data-exercise="mod3-ex5" placeholder="Mi sombra me diría..."></textarea>
+        <div class="exercise-hint">💡 La sombra no es tu enemiga. Es una parte de ti que necesita ser integrada, no destruida.</div>
+      </div>
+      <div class="exercise-box">
+        <h4><span class="ex-num">6</span> Integrando la Sombra</h4>
+        <p>¿Cómo podrías dar espacio saludable a estos aspectos rechazados? ¿Qué forma constructiva podría tomar esta energía?</p>
+        <textarea data-exercise="mod3-ex6" placeholder="Podría integrar mi sombra mediante..."></textarea>
+        <div class="exercise-hint">💡 Por ejemplo: la rabia reprimida puede transformarse en asertividad; el egoísmo negado puede volverse autocuidado sano.</div>
+      </div>
+    `
+  },
+  {
+    id: 4,
+    label: 'Módulo 4',
+    title: 'El Niño Interior',
+    content: () => `
+      <h3>Sanando las Heridas de Tu Infancia</h3>
+      <p>Dentro de cada una de nosotras vive todavía la niña que fuimos. No como un recuerdo, sino como una parte viva de nuestra psique. Esa niña interior carga con todas las heridas, necesidades insatisfechas y emociones no procesadas de la infancia.</p>
+      <p>Cuando esa niña interior no ha sido sanada, sigue controlando muchas de nuestras reacciones adultas. Nuestros miedos irracionales, nuestros patrones destructivos, nuestra necesidad desesperada de aprobación.</p>
+
+      <div class="story-box">
+        <div class="story-label">✦ Historia real</div>
+        <h4>La historia de Lucía</h4>
+        <p>Lucía tenía 38 años y tres relaciones fracasadas. Siempre el mismo patrón: al primer signo de distanciamiento de su pareja, entraba en pánico. Se volvía demandante, celosa, necesitada.</p>
+        <p>En terapia descubrió que su padre la había abandonado a los 5 años. La niña Lucía solo pudo concluir una cosa: <em>"Papá se fue porque yo no fui suficiente."</em> Esa niña aterrorizada seguía viviendo dentro de Lucía adulta, tomando el control cada vez que sentía el riesgo de abandono.</p>
+      </div>
+
+      <h3>Las Heridas Básicas de la Niña Interior</h3>
+      <ul>
+        <li><strong>Abandono:</strong> "No soy suficiente para que te quedes"</li>
+        <li><strong>Rechazo:</strong> "Hay algo malo en mí"</li>
+        <li><strong>Traición:</strong> "No puedo confiar en nadie"</li>
+        <li><strong>Humillación:</strong> "Soy defectuosa y todas lo ven"</li>
+        <li><strong>Injusticia:</strong> "El mundo es injusto y no puedo hacer nada"</li>
+      </ul>
+
+      <div class="exercise-box">
+        <h4><span class="ex-num">1</span> Conectando con Tu Niña Interior</h4>
+        <p>Cierra los ojos y visualiza a la niña que fuiste. ¿Qué edad tiene? ¿Cómo se ve? ¿Cómo se siente? Describe lo que percibes.</p>
+        <textarea data-exercise="mod4-ex1" placeholder="Mi niña interior es..."></textarea>
+        <div class="exercise-hint">💡 No fuerces nada. Solo permite que surja una imagen o sensación.</div>
+      </div>
+      <div class="exercise-box">
+        <h4><span class="ex-num">2</span> Las Heridas de Tu Niña Interior</h4>
+        <p>¿Qué heridas carga tu niña interior? ¿Abandono, rechazo, traición, humillación, injusticia?</p>
+        <textarea data-exercise="mod4-ex2" placeholder="Las heridas de mi niña interior son..."></textarea>
+      </div>
+      <div class="exercise-box">
+        <h4><span class="ex-num">3</span> Situaciones Detonadoras</h4>
+        <p>¿En qué situaciones actuales reacciona tu niña interior herida? ¿Cuándo te encuentras reaccionando de forma desproporcionada?</p>
+        <textarea data-exercise="mod4-ex3" placeholder="Mi niña interior se activa cuando..."></textarea>
+        <div class="exercise-hint">💡 Por ejemplo: cuando alguien cancela planes, cuando no recibes respuesta inmediata, cuando te critican...</div>
+      </div>
+      <div class="exercise-box">
+        <h4><span class="ex-num">4</span> Carta a Tu Niña Interior</h4>
+        <p>Escribe una carta a esa niña que fuiste. ¿Qué necesita escuchar? ¿Qué consuelo, qué validación, qué amor nunca recibió?</p>
+        <textarea data-exercise="mod4-ex4" placeholder="Querida niña interior..."></textarea>
+        <div class="exercise-hint">💡 Escribe con ternura, compasión y validación, como hablarías con una niña real.</div>
+      </div>
+      <div class="exercise-box">
+        <h4><span class="ex-num">5</span> Lo Que Necesitaste y No Recibiste</h4>
+        <p>¿Qué necesitabas de tus padres o cuidadores que no recibiste? Protección, validación, atención, amor incondicional...</p>
+        <textarea data-exercise="mod4-ex5" placeholder="Lo que necesité y no recibí fue..."></textarea>
+      </div>
+      <div class="exercise-box">
+        <h4><span class="ex-num">6</span> Re-maternarte</h4>
+        <p>¿Cómo puedes darte a ti misma ahora lo que no recibiste entonces? ¿Cómo puede tu yo adulta cuidar de tu niña interior?</p>
+        <textarea data-exercise="mod4-ex6" placeholder="Puedo cuidar de mi niña interior mediante..."></textarea>
+        <div class="exercise-hint">💡 Ejemplos: validar tus emociones, ponerte límites sanos, darte permiso para descansar, celebrar tus logros.</div>
+      </div>
+    `
+  },
+  {
+    id: 5,
+    label: 'Módulo 5',
+    title: 'Creencias Limitantes',
+    content: () => `
+      <h3>Desmantelando los Pensamientos Que Te Aprisionan</h3>
+      <p>Nuestras creencias son los lentes a través de los cuales vemos el mundo. Y muchas de nuestras creencias más profundas son limitantes, falsas y destructivas. Las hemos repetido tanto tiempo que se han vuelto profecías autocumplidas.</p>
+
+      <div class="story-box">
+        <div class="story-label">✦ Historia real</div>
+        <h4>La historia de Marcos</h4>
+        <p>Marcos tenía 42 años y trabajaba en el mismo puesto desde hacía 15. Le habían ofrecido ascensos varias veces, pero siempre los rechazaba: "No estoy lista. Podría fracasar."</p>
+        <p>Todo se remontaba a un recital de fin de año a los 10 años, cuando olvidó las palabras de su poema frente a todos. En ese momento formó una creencia: <em>"Soy un fracaso cuando importa."</em> Esa creencia lo había limitado 32 años.</p>
+      </div>
+
+      <h3>Tipos de Creencias Limitantes</h3>
+      <ul>
+        <li><strong>Sobre ti misma:</strong> "No soy suficiente", "Soy defectuosa", "No merezco amor"</li>
+        <li><strong>Sobre las demás:</strong> "No se puede confiar en nadie", "La gente solo busca aprovecharse"</li>
+        <li><strong>Sobre la vida:</strong> "El mundo es peligroso", "La vida es sufrimiento"</li>
+        <li><strong>Sobre el cambio:</strong> "Yo soy así", "Es demasiado tarde para cambiar"</li>
+      </ul>
+
+      <div class="exercise-box">
+        <h4><span class="ex-num">1</span> Identificando Tus Creencias Limitantes</h4>
+        <p>Haz una lista completando estas frases: "No puedo...", "No merezco...", "Siempre...", "Nunca..."</p>
+        <textarea data-exercise="mod5-ex1" placeholder="Mis creencias limitantes son..."></textarea>
+        <div class="exercise-hint">💡 Las creencias más profundas son las que ni siquiera cuestionamos porque las vemos como "verdades obvias".</div>
+      </div>
+      <div class="exercise-box">
+        <h4><span class="ex-num">2</span> El Origen de Tus Creencias</h4>
+        <p>Elige una creencia limitante fuerte. ¿Cuándo la adoptaste? ¿Qué experiencia o mensaje te llevó a creerla?</p>
+        <textarea data-exercise="mod5-ex2" placeholder="Esta creencia nació cuando..."></textarea>
+      </div>
+      <div class="exercise-box">
+        <h4><span class="ex-num">3</span> El Costo de Tus Creencias</h4>
+        <p>¿Qué te han costado estas creencias? ¿Qué oportunidades has perdido? ¿Cómo han restringido tu vida?</p>
+        <textarea data-exercise="mod5-ex3" placeholder="Estas creencias me han costado..."></textarea>
+      </div>
+      <div class="exercise-box">
+        <h4><span class="ex-num">4</span> Cuestionando la Evidencia</h4>
+        <p>Toma una creencia limitante. ¿Es realmente cierta al 100%? ¿Hay evidencia que la contradice? ¿Hay excepciones?</p>
+        <textarea data-exercise="mod5-ex4" placeholder="Al cuestionar mi creencia, encuentro que..."></textarea>
+        <div class="exercise-hint">💡 Las creencias limitantes rara vez son absolutamente ciertas. Busca las excepciones.</div>
+      </div>
+      <div class="exercise-box">
+        <h4><span class="ex-num">5</span> Creencias Empoderadoras</h4>
+        <p>Para cada creencia limitante, ¿qué creencia empoderadora y realista podría reemplazarla?</p>
+        <textarea data-exercise="mod5-ex5" placeholder="Mis nuevas creencias empoderadoras son..."></textarea>
+        <div class="exercise-hint">💡 Ejemplo: "No soy suficiente" → "Estoy en proceso de crecimiento y merezco amor mientras aprendo".</div>
+      </div>
+      <div class="exercise-box">
+        <h4><span class="ex-num">6</span> Experimento de Realidad</h4>
+        <p>¿Qué pequeña acción podrías tomar esta semana para probar si tu creencia limitante es realmente cierta?</p>
+        <textarea data-exercise="mod5-ex6" placeholder="Voy a probar mi creencia mediante..."></textarea>
+        <div class="exercise-hint">💡 Las creencias cambian con experiencia, no solo con pensamiento. Necesitas evidencia nueva.</div>
+      </div>
+    `
+  },
+  {
+    id: 6,
+    label: 'Módulo 6',
+    title: 'Las Heridas',
+    content: () => `
+      <h3>Reconociendo y Transformando el Dolor del Pasado</h3>
+      <p>Todas llevamos heridas. Algunas son grandes y obvias: abuso, abandono, traumas severos. Otras son más sutiles pero igual de profundas: la frialdad emocional de un padre, el mensaje sutil de que tu existencia era una carga.</p>
+      <p>Estas heridas no se curan simplemente con el tiempo. "El tiempo cura todas las heridas" es una mentira. El tiempo solo las entierra, pero siguen ahí, infectadas, afectando cada aspecto de nuestra vida.</p>
+
+      <div class="story-box">
+        <div class="story-label">✦ Historia real</div>
+        <h4>La historia de Ana</h4>
+        <p>Ana creció con una madre deprimida que, aunque nunca fue abusiva, era emocionalmente ausente. Cuando Ana lloraba, su madre suspiraba: "¿Otra vez? ¿Por qué eres tan difícil?" Ana aprendió rápido: tener necesidades es ser una carga.</p>
+        <p>A los 35 años, Ana estaba agotada de ser "la fuerte". Daba y daba, pero no sabía recibir. Su sanación implicó aprender algo radical: que tener necesidades no te hace débil, te hace humana.</p>
+      </div>
+
+      <div class="exercise-box">
+        <h4><span class="ex-num">1</span> Inventario de Heridas</h4>
+        <p>¿Cuáles son las heridas más significativas de tu vida? Incluye tanto las grandes como las "pequeñas": rechazos, humillaciones, mensajes dañinos.</p>
+        <textarea data-exercise="mod6-ex1" placeholder="Mis heridas más significativas son..."></textarea>
+      </div>
+      <div class="exercise-box">
+        <h4><span class="ex-num">2</span> Cómo Se Manifiestan Tus Heridas</h4>
+        <p>¿Cómo afectan estas heridas tu vida actual? ¿Qué patrones, miedos o limitaciones vienen de ellas?</p>
+        <textarea data-exercise="mod6-ex2" placeholder="Estas heridas se manifiestan en mi vida como..."></textarea>
+        <div class="exercise-hint">💡 Observa tus patrones repetitivos. Ahí suelen estar las heridas sin sanar.</div>
+      </div>
+      <div class="exercise-box">
+        <h4><span class="ex-num">3</span> El Duelo No Procesado</h4>
+        <p>¿Qué emociones relacionadas con tus heridas nunca te permitiste sentir completamente? Rabia, tristeza, terror, impotencia...</p>
+        <textarea data-exercise="mod6-ex3" placeholder="Las emociones que no procesé son..."></textarea>
+        <div class="exercise-hint">💡 Para sanar, primero hay que sentir. Lo que reprimimos permanece.</div>
+      </div>
+      <div class="exercise-box">
+        <h4><span class="ex-num">4</span> Carta a Quien Te Hirió</h4>
+        <p>Escribe una carta (que no enviarás) a quien te hirió. Di todo lo que nunca pudiste decir, sin censura.</p>
+        <textarea data-exercise="mod6-ex4" placeholder="Necesito decirte que..."></textarea>
+        <div class="exercise-hint">💡 Esta carta es para ti, no para ellos. Es para dar voz a tu dolor.</div>
+      </div>
+      <div class="exercise-box">
+        <h4><span class="ex-num">5</span> Compasión por Tu Dolor</h4>
+        <p>Si una amiga te contara tu historia, ¿qué le dirías? ¿Qué compasión le ofrecerías? ¿Puedes darte esa misma compasión a ti?</p>
+        <textarea data-exercise="mod6-ex5" placeholder="Me merezco compasión porque..."></textarea>
+      </div>
+      <div class="exercise-box">
+        <h4><span class="ex-num">6</span> Transformando el Dolor en Sabiduría</h4>
+        <p>¿Qué has aprendido de tus heridas? ¿Qué fortaleza o compasión has desarrollado a través de tu dolor?</p>
+        <textarea data-exercise="mod6-ex6" placeholder="Mis heridas me han enseñado..."></textarea>
+        <div class="exercise-hint">💡 Tu dolor puede transformarse en medicina para otras.</div>
+      </div>
+    `
+  },
+  {
+    id: 7,
+    label: 'Módulo 7',
+    title: 'El Perdón',
+    content: () => `
+      <h3>Liberándote del Resentimiento</h3>
+      <p>El perdón es quizás el concepto más malentendido en el proceso de sanación. No es olvidar. No es justificar. No es reconciliarse. No es debilidad.</p>
+      <p>El perdón es soltar. Es dejar de cargar con el veneno del resentimiento. Es reconocer que mientras sigas aferrada a la rabia contra quien te hirió, esa persona sigue controlando tu vida.</p>
+
+      <div class="quote-box">
+        <p>"Guardar resentimiento es como tomar veneno y esperar que el otro muera."</p>
+      </div>
+
+      <div class="story-box">
+        <div class="story-label">✦ Historia real</div>
+        <h4>La historia de Diego</h4>
+        <p>El padre de Diego era alcohólico y violento. Diego creció cargando una rabia inmensa: "Lo odio. Nunca lo perdonaré." A los 35, se dio cuenta de algo: su padre había muerto 5 años atrás, pero Diego seguía cargando su rabia. Seguía dejando que su padre muerto controlara su paz.</p>
+        <p>"Perdonar a mi padre fue reconocer que era un hombre profundamente enfermo, roto por su propio dolor. Esto no justifica lo que hizo, pero me ayudó a soltar. A liberarme."</p>
+      </div>
+
+      <h3>Lo Que el Perdón NO Es</h3>
+      <ul>
+        <li>No es olvidar o pretender que no pasó</li>
+        <li>No es justificar o excusar el daño</li>
+        <li>No es reconciliarse con quien te hirió</li>
+        <li>No es permitir que te sigan dañando</li>
+      </ul>
+      <h3>Lo Que el Perdón SÍ Es</h3>
+      <ul>
+        <li>Soltar el resentimiento que te envenena a ti</li>
+        <li>Dejar de darle poder a quien te hirió</li>
+        <li>Elegir tu paz sobre tu razón</li>
+        <li>Liberarte de la prisión del odio</li>
+      </ul>
+
+      <div class="exercise-box">
+        <h4><span class="ex-num">1</span> ¿A Quién Necesitas Perdonar?</h4>
+        <p>Haz una lista de las personas que te han herido y contra quienes sientes resentimiento. Incluye también a ti misma si es necesario.</p>
+        <textarea data-exercise="mod7-ex1" placeholder="Las personas que necesito perdonar son..."></textarea>
+      </div>
+      <div class="exercise-box">
+        <h4><span class="ex-num">2</span> El Peso del Resentimiento</h4>
+        <p>¿Cómo te ha afectado cargar con este resentimiento? ¿Qué te ha costado en paz, energía, salud?</p>
+        <textarea data-exercise="mod7-ex2" placeholder="Mi resentimiento me ha costado..."></textarea>
+      </div>
+      <div class="exercise-box">
+        <h4><span class="ex-num">3</span> Comprendiendo Sin Justificar</h4>
+        <p>Intenta entender (sin justificar) por qué quien te hirió actuó como lo hizo. ¿Qué dolor o limitaciones tenía esa persona?</p>
+        <textarea data-exercise="mod7-ex3" placeholder="Esa persona actuó así porque..."></textarea>
+        <div class="exercise-hint">💡 Personas heridas hieren a otras. Esto no justifica el daño, pero ayuda a soltar.</div>
+      </div>
+      <div class="exercise-box">
+        <h4><span class="ex-num">4</span> Carta de Perdón</h4>
+        <p>Escribe una carta de perdón (que no tienes que enviar). No para justificar lo que pasó, sino para liberarte del peso.</p>
+        <textarea data-exercise="mod7-ex4" placeholder="Elijo perdonarte porque..."></textarea>
+      </div>
+      <div class="exercise-box">
+        <h4><span class="ex-num">5</span> Perdón a Ti Misma</h4>
+        <p>¿Qué necesitas perdonarte a ti misma? ¿Por qué errores o decisiones sigues castigándote?</p>
+        <textarea data-exercise="mod7-ex5" placeholder="Necesito perdonarme por..."></textarea>
+        <div class="exercise-hint">💡 A menudo somos nuestra jueza más severa. Date la compasión que le darías a una amiga.</div>
+      </div>
+      <div class="exercise-box">
+        <h4><span class="ex-num">6</span> El Ritual de Soltar</h4>
+        <p>¿Qué ritual simbólico podrías hacer para soltar el resentimiento? Quemar una carta, soltar un globo, plantar algo nuevo...</p>
+        <textarea data-exercise="mod7-ex6" placeholder="Mi ritual de soltar será..."></textarea>
+        <div class="exercise-hint">💡 Los rituales simbólicos ayudan al inconsciente a procesar el cambio.</div>
+      </div>
+    `
+  },
+  {
+    id: 8,
+    label: 'Módulo 8',
+    title: 'La Gratitud',
+    content: () => `
+      <h3>Cultivando una Nueva Forma de Ver la Vida</h3>
+      <p>La gratitud no es pensamiento positivo superficial. No es negar el dolor o fingir que todo está bien. La gratitud es la capacidad de encontrar lo sagrado en lo ordinario, de elegir qué parte de tu realidad decides alimentar con tu atención.</p>
+
+      <div class="story-box">
+        <div class="story-label">✦ Historia real</div>
+        <h4>La historia de Elena</h4>
+        <p>Elena había pasado dos años sanando después de un divorcio devastador. Pero aún estaba atrapada en una narrativa de víctima: "Mi ex me destruyó. La vida ha sido injusta conmigo."</p>
+        <p>Su terapeuta le dio un ejercicio simple: durante 30 días, escribir cada noche tres cosas por las que estaba agradecida. Los primeros días luchaba. Pero lentamente comenzó a notar cosas pequeñas. Algo comenzó a cambiar en ella. La gratitud no borró su dolor, pero le dio acceso a una perspectiva más amplia.</p>
+      </div>
+
+      <div class="exercise-box">
+        <h4><span class="ex-num">1</span> Gratitud por lo Básico</h4>
+        <p>Haz una lista de las cosas básicas de tu vida por las que estás agradecida: salud, techo, comida, personas, capacidades...</p>
+        <textarea data-exercise="mod8-ex1" placeholder="Estoy agradecida por..."></textarea>
+        <div class="exercise-hint">💡 A menudo damos por sentado lo esencial hasta que lo perdemos.</div>
+      </div>
+      <div class="exercise-box">
+        <h4><span class="ex-num">2</span> Gratitud por las Dificultades</h4>
+        <p>¿Qué dificultades de tu vida, en retrospectiva, te han traído crecimiento o regalos inesperados?</p>
+        <textarea data-exercise="mod8-ex2" placeholder="Estoy agradecida por estas dificultades porque..."></textarea>
+      </div>
+      <div class="exercise-box">
+        <h4><span class="ex-num">3</span> Gratitud por las Personas</h4>
+        <p>¿Quiénes son las personas que han marcado positivamente tu vida? ¿Qué te han dado?</p>
+        <textarea data-exercise="mod8-ex3" placeholder="Estoy agradecida por estas personas..."></textarea>
+      </div>
+      <div class="exercise-box">
+        <h4><span class="ex-num">4</span> Gratitud por Ti Misma</h4>
+        <p>¿Por qué aspectos, cualidades o fortalezas tuyas estás agradecida? ¿Qué te ha ayudado a sobrevivir y crecer?</p>
+        <textarea data-exercise="mod8-ex4" placeholder="Estoy agradecida de mí misma por..."></textarea>
+        <div class="exercise-hint">💡 La auto-gratitud no es narcisismo. Es reconocer tu valor y tu esfuerzo.</div>
+      </div>
+      <div class="exercise-box">
+        <h4><span class="ex-num">5</span> Práctica Diaria de Gratitud</h4>
+        <p>Comprométete a escribir cada noche 3 cosas por las que estuviste agradecida ese día. Empieza hoy: ¿cuáles son las 3 de hoy?</p>
+        <textarea data-exercise="mod8-ex5" placeholder="Hoy estoy agradecida por..."></textarea>
+        <div class="exercise-hint">💡 La gratitud es como un músculo. Se fortalece con práctica constante.</div>
+      </div>
+      <div class="exercise-box">
+        <h4><span class="ex-num">6</span> Carta de Gratitud</h4>
+        <p>Elige a una persona que haya impactado positivamente tu vida. Escribe una carta de gratitud detallando qué te dio y cómo te impactó. ¿Le enviarás esta carta?</p>
+        <textarea data-exercise="mod8-ex6" placeholder="Querida..., quiero agradecerte por..."></textarea>
+        <div class="exercise-hint">💡 Expresar gratitud a otras no solo las bendice a ellas, te transforma a ti.</div>
+      </div>
+    `
+  },
+  {
+    id: 9,
+    label: 'Módulo 9',
+    title: 'Tu Nueva Yo',
+    content: () => `
+      <h3>Construyendo Tu Nueva Yo</h3>
+      <p>Has hecho un trabajo profundo. Ahora viene la pregunta más importante: <em>¿Quién quieres ser?</em></p>
+      <p>No quién crees que deberías ser. No quién otras esperan que seas. Sino quién REALMENTE quieres ser cuando te quitas todas las capas de condicionamiento, expectativas y miedo.</p>
+
+      <div class="story-box">
+        <div class="story-label">✦ Historia real</div>
+        <h4>La historia de Carmen</h4>
+        <p>Carmen había pasado 50 años viviendo la vida que otros diseñaron para ella. Después de su divorcio, en su pequeño apartamento, se miró al espejo y se preguntó: <em>"¿Quién eres tú, Carmen? No la doctora, no la ex esposa, no la madre. ¿Quién ERES?"</em></p>
+        <p>Empezó a explorar. Tomó clases de pintura. Viajó sola por primera vez. Poco a poco descubrió a Carmen la auténtica. Hoy, a sus 52 años, dice que nunca ha sido más feliz.</p>
+      </div>
+
+      <div class="exercise-box">
+        <h4><span class="ex-num">1</span> Diseña Tu Nueva Yo</h4>
+        <p>Describe con detalle quién quieres ser. ¿Cómo es tu vida ideal? ¿Qué valores son importantes para ti? Escribe sin limitaciones.</p>
+        <textarea data-exercise="mod9-ex1" placeholder="Mi nueva yo es..."></textarea>
+        <div class="exercise-hint">💡 No te limites por lo que crees posible. Primero imagina.</div>
+      </div>
+      <div class="exercise-box">
+        <h4><span class="ex-num">2</span> Tus Valores Esenciales</h4>
+        <p>¿Cuáles son los 5 valores más importantes para ti? Autenticidad, libertad, amor, creatividad, crecimiento...</p>
+        <textarea data-exercise="mod9-ex2" placeholder="Mis valores esenciales son..."></textarea>
+        <div class="exercise-hint">💡 Estos valores serán tu brújula para tomar decisiones.</div>
+      </div>
+      <div class="exercise-box">
+        <h4><span class="ex-num">3</span> Tu Día Ideal</h4>
+        <p>Describe tu día ideal desde que despiertas hasta que duermes. ¿Cómo te sientes? ¿Con quién estás? ¿Qué haces?</p>
+        <textarea data-exercise="mod9-ex3" placeholder="Mi día ideal es..."></textarea>
+      </div>
+      <div class="exercise-box">
+        <h4><span class="ex-num">4</span> Relaciones Auténticas</h4>
+        <p>¿Cómo quieres relacionarte con las personas desde tu nueva yo? ¿Qué tipo de vínculos quieres cultivar? ¿Qué límites necesitas establecer?</p>
+        <textarea data-exercise="mod9-ex4" placeholder="En mis relaciones, quiero..."></textarea>
+      </div>
+      <div class="exercise-box">
+        <h4><span class="ex-num">5</span> Tu Contribución</h4>
+        <p>¿Cómo quieres contribuir al mundo desde tu nueva yo? ¿Qué regalo único tienes para ofrecer?</p>
+        <textarea data-exercise="mod9-ex5" placeholder="Mi contribución al mundo es..."></textarea>
+        <div class="exercise-hint">💡 Tu dolor sanado puede convertirse en medicina para otras.</div>
+      </div>
+      <div class="exercise-box">
+        <h4><span class="ex-num">6</span> La Brecha</h4>
+        <p>¿Qué brecha existe entre quién eres ahora y quién quieres ser? ¿Qué necesitas soltar? ¿Qué necesitas cultivar?</p>
+        <textarea data-exercise="mod9-ex6" placeholder="Para ser mi nueva yo, necesito..."></textarea>
+      </div>
+    `
+  },
+  {
+    id: 10,
+    label: 'Módulo 10',
+    title: 'El Plan de Acción',
+    content: () => `
+      <h3>Creando Tu Camino Concreto</h3>
+      <p>Has hecho un viaje profundo de autoconocimiento. Pero el conocimiento sin acción es solo filosofía. La transformación real requiere pasos concretos.</p>
+
+      <h3>Principios de un Buen Plan</h3>
+      <ul>
+        <li><strong>Empieza pequeña:</strong> Cambios radicales rara vez funcionan. Pequeños pasos consistentes sí.</li>
+        <li><strong>Sé específica:</strong> "Quiero ser más auténtica" es vago. "Voy a expresar una opinión honesta en cada reunión" es concreto.</li>
+        <li><strong>Anticipa la resistencia:</strong> Tu psique se resistirá al cambio. Es normal.</li>
+        <li><strong>Busca apoyo:</strong> La transformación en soledad es mucho más difícil.</li>
+        <li><strong>Celebra el progreso:</strong> No esperes la perfección. Cada paso cuenta.</li>
+        <li><strong>Sé compasiva:</strong> Habrá recaídas. No son fracasos, son parte del proceso.</li>
+      </ul>
+
+      <div class="exercise-box">
+        <h4><span class="ex-num">1</span> Tu Visión a Un Año</h4>
+        <p>Dentro de un año, si este proceso ha sido exitoso, ¿cómo es tu vida? ¿Qué ha cambiado? Sé específica.</p>
+        <textarea data-exercise="mod10-ex1" placeholder="Dentro de un año, mi vida es..."></textarea>
+        <div class="exercise-hint">💡 La claridad en la visión ayuda a crear el camino.</div>
+      </div>
+      <div class="exercise-box">
+        <h4><span class="ex-num">2</span> Primeros Pasos Concretos</h4>
+        <p>¿Cuáles son los 3 primeros pasos concretos que puedes tomar ESTA SEMANA?</p>
+        <textarea data-exercise="mod10-ex2" placeholder="Esta semana voy a..."></textarea>
+        <div class="exercise-hint">💡 Asegúrate de que sean acciones concretas, no solo intenciones.</div>
+      </div>
+      <div class="exercise-box">
+        <h4><span class="ex-num">3</span> Obstáculos Anticipados</h4>
+        <p>¿Qué obstáculos internos (miedos, auto-sabotaje) o externos (tiempo, personas) podrían dificultar tu transformación?</p>
+        <textarea data-exercise="mod10-ex3" placeholder="Los obstáculos que anticipo son..."></textarea>
+      </div>
+      <div class="exercise-box">
+        <h4><span class="ex-num">4</span> Estrategias para Obstáculos</h4>
+        <p>Para cada obstáculo que identificaste, ¿qué estrategia usarás para manejarlo?</p>
+        <textarea data-exercise="mod10-ex4" placeholder="Cuando enfrente estos obstáculos, voy a..."></textarea>
+      </div>
+      <div class="exercise-box">
+        <h4><span class="ex-num">5</span> Tu Sistema de Apoyo</h4>
+        <p>¿Quién puede apoyarte en este proceso? ¿Qué recursos necesitas? Terapia, grupos de apoyo, amigas, libros...</p>
+        <textarea data-exercise="mod10-ex5" placeholder="Mi sistema de apoyo incluye..."></textarea>
+      </div>
+      <div class="exercise-box">
+        <h4><span class="ex-num">6</span> Hábitos y Rituales Diarios</h4>
+        <p>¿Qué hábitos podrías establecer para mantener tu transformación? Meditación, escritura, movimiento, tiempo en naturaleza...</p>
+        <textarea data-exercise="mod10-ex6" placeholder="Mis hábitos diarios serán..."></textarea>
+        <div class="exercise-hint">💡 La transformación no es un evento, es una práctica diaria.</div>
+      </div>
+      <div class="exercise-box">
+        <h4><span class="ex-num">7</span> Tu Compromiso Final</h4>
+        <p>Escribe un compromiso final contigo misma. ¿Qué promesa te haces sobre cómo vivirás de ahora en adelante?</p>
+        <textarea data-exercise="mod10-ex7" placeholder="Me comprometo a..."></textarea>
+      </div>
+
+      <div class="completion-badge">
+        ✨ ¡Felicitaciones! Has completado el viaje. Pero recuerda: esto no es un final, es un comienzo. La transformación real sucede en cómo vives cada día de ahora en adelante. ✨
+      </div>
+    `
+  }
 ];
 
+/* ════════════════════════════════════════════════════════════════
+   STATE
+════════════════════════════════════════════════════════════════ */
 let currentModule = 0;
 let completedModules = new Set();
 let answers = {};
 
+/* ════════════════════════════════════════════════════════════════
+   AUTH
+════════════════════════════════════════════════════════════════ */
 function checkAccess() {
-    const code = document.getElementById('accessCode').value;
-    if (code === 'STM2024') {
-        document.getElementById('loginScreen').style.display = 'none';
-        document.getElementById('appContainer').style.display = 'block';
-        loadAnswers();
-        renderSidebar();
-        showModule(0);
-    } else {
-        alert('Código incorrecto');
-    }
-}
-
-function renderSidebar() {
-    const sidebar = document.getElementById('sidebar');
-    sidebar.innerHTML = modules.map((module, index) => {
-        let className = 'module-item';
-        if (completedModules.has(index)) className += ' completed';
-        if (index === currentModule) className += ' active';
-        return `<div class="${className}" onclick="showModule(${index})">${module.title}</div>`;
-    }).join('');
-}
-
-function showModule(index) {
-    currentModule = index;
-    const contentArea = document.getElementById('contentArea');
-    const module = modules[index];
-    
-    contentArea.innerHTML = `
-        <div class="module-content active">
-            ${module.content}
-            <div class="nav-buttons">
-                <button class="btn-prev" onclick="previousModule()" ${index === 0 ? 'style="visibility:hidden"' : ''}>← Anterior</button>
-                <button class="btn-next" id="nextBtn" onclick="nextModule()">${index === modules.length - 1 ? '✅ Completar y continuar' : 'Completar y continuar →'}</button>
-            </div>
-        </div>
-    `;
-    
+  const code = document.getElementById('accessCode').value.trim();
+  if (code === 'STM2024') {
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('appContainer').style.display = 'block';
+    loadState();
     renderSidebar();
-    loadModuleAnswers(index);
-    setupExerciseListeners();
-    contentArea.scrollTop = 0;
+    // Go to last unfinished or first module
+    const firstUnfinished = modules.findIndex((_, i) => !completedModules.has(i));
+    showModule(firstUnfinished >= 0 ? firstUnfinished : 0);
+  } else {
+    const err = document.getElementById('loginError');
+    err.textContent = 'Código incorrecto. Inténtalo de nuevo.';
+    setTimeout(() => { err.textContent = ''; }, 3000);
+    document.getElementById('accessCode').style.borderColor = '#c0392b';
+    setTimeout(() => { document.getElementById('accessCode').style.borderColor = ''; }, 1500);
+  }
 }
 
-function setupExerciseListeners() {
-    const textareas = document.querySelectorAll('textarea[data-exercise]');
-    const nextBtn = document.getElementById('nextBtn');
-    
-    function checkCompletion() {
-        let hasContent = false;
-        textareas.forEach(textarea => {
-            if (textarea.value.trim().length >= 10) {
-                hasContent = true;
-            }
-        });
-        nextBtn.disabled = !hasContent;
-    }
-    
-    textareas.forEach(textarea => {
-        textarea.addEventListener('input', () => {
-            saveAnswer(textarea.dataset.exercise, textarea.value);
-            checkCompletion();
-        });
-    });
-    
-    checkCompletion();
-}
-
-function saveAnswer(exercise, value) {
-    if (!answers[currentModule]) answers[currentModule] = {};
-    answers[currentModule][exercise] = value;
+/* ════════════════════════════════════════════════════════════════
+   STATE PERSISTENCE
+════════════════════════════════════════════════════════════════ */
+function saveState() {
+  try {
     localStorage.setItem('stm_answers', JSON.stringify(answers));
-}
-
-function loadAnswers() {
-    const saved = localStorage.getItem('stm_answers');
-    if (saved) answers = JSON.parse(saved);
-    const completed = localStorage.getItem('stm_completed');
-    if (completed) {
-        completedModules = new Set(JSON.parse(completed));
-    }
-}
-
-function loadModuleAnswers(moduleIndex) {
-    if (answers[moduleIndex]) {
-        Object.entries(answers[moduleIndex]).forEach(([exercise, value]) => {
-            const textarea = document.querySelector(`textarea[data-exercise="${exercise}"]`);
-            if (textarea) textarea.value = value;
-        });
-    }
-}
-
-function nextModule() {
-    completedModules.add(currentModule);
     localStorage.setItem('stm_completed', JSON.stringify([...completedModules]));
-    
-    if (currentModule < modules.length - 1) {
-        showModule(currentModule + 1);
-    } else {
-        alert('¡Felicitaciones! Has completado todo el viaje de transformación. Recuerda: esto es solo el comienzo. La transformación real sucede en cómo vives cada día.');
-    }
+  } catch(e) {}
 }
 
-function previousModule() {
-    if (currentModule > 0) {
-        showModule(currentModule - 1);
-    }
+function loadState() {
+  try {
+    const a = localStorage.getItem('stm_answers');
+    if (a) answers = JSON.parse(a);
+    const c = localStorage.getItem('stm_completed');
+    if (c) completedModules = new Set(JSON.parse(c));
+  } catch(e) {}
+}
+
+/* ════════════════════════════════════════════════════════════════
+   SIDEBAR
+════════════════════════════════════════════════════════════════ */
+function renderSidebar() {
+  const sidebar = document.getElementById('sidebar');
+  sidebar.innerHTML = modules.map((mod, i) => {
+    const done = completedModules.has(i);
+    const active = i === currentModule;
+    let cls = 'nav-item';
+    if (active) cls += ' active';
+    if (done)   cls += ' completed';
+    const dotContent = done ? '✓' : (i === 0 ? '★' : i);
+    return `<div class="${cls}" onclick="showModule(${i}); closeSidebar();">
+      <span class="nav-dot">${dotContent}</span>
+      <span>${mod.label === 'Bienvenida' ? mod.label : mod.label + ': ' + mod.title.split(' ').slice(0,2).join(' ')}</span>
+    </div>`;
+  }).join('');
+  updateProgress();
+}
+
+function updateProgress() {
+  const done = completedModules.size;
+  const total = modules.length;
+  const pct = Math.round(done / total * 100);
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressLabel').textContent = done + ' / ' + total;
+}
+
+/* ════════════════════════════════════════════════════════════════
+   MODULE RENDERING
+════════════════════════════════════════════════════════════════ */
+function showModule(index) {
+  currentModule = index;
+  const mod = modules[index];
+  const area = document.getElementById('contentArea');
+
+  const isFirst = index === 0;
+  const isLast  = index === modules.length - 1;
+
+  area.innerHTML = `
+    <div class="mod-header">
+      <span class="mod-label">${mod.label}</span>
+      <h2>${mod.title}</h2>
+      <div class="mod-header-line"></div>
+    </div>
+    <div class="mod-body">
+      ${mod.content()}
+      <div class="nav-buttons">
+        <button class="btn-nav prev ${isFirst ? 'btn-invisible' : ''}" onclick="prevModule()">← Anterior</button>
+        <button class="btn-nav next" id="nextBtn" onclick="nextModule()" disabled>
+          ${isLast ? '✅ Completar viaje' : 'Completar y continuar →'}
+        </button>
+      </div>
+    </div>
+  `;
+
+  renderSidebar();
+  loadModuleAnswers(index);
+  setupListeners();
+  area.scrollTop = 0;
+}
+
+/* ════════════════════════════════════════════════════════════════
+   EXERCISES
+════════════════════════════════════════════════════════════════ */
+function setupListeners() {
+  const textareas = document.querySelectorAll('textarea[data-exercise]');
+  const btn = document.getElementById('nextBtn');
+
+  const checkReady = () => {
+    const hasAny = [...textareas].some(t => t.value.trim().length >= 5);
+    btn.disabled = !hasAny;
+  };
+
+  textareas.forEach(t => {
+    t.addEventListener('input', () => {
+      saveAnswer(t.dataset.exercise, t.value);
+      checkReady();
+    });
+  });
+
+  checkReady();
+}
+
+function saveAnswer(key, val) {
+  if (!answers[currentModule]) answers[currentModule] = {};
+  answers[currentModule][key] = val;
+  saveState();
+}
+
+function loadModuleAnswers(idx) {
+  if (!answers[idx]) return;
+  Object.entries(answers[idx]).forEach(([key, val]) => {
+    const el = document.querySelector(`textarea[data-exercise="${key}"]`);
+    if (el) el.value = val;
+  });
+  // Re-check button after loading
+  const btn = document.getElementById('nextBtn');
+  const textareas = document.querySelectorAll('textarea[data-exercise]');
+  const hasAny = [...textareas].some(t => t.value.trim().length >= 5);
+  if (btn) btn.disabled = !hasAny;
+}
+
+/* ════════════════════════════════════════════════════════════════
+   NAVIGATION
+════════════════════════════════════════════════════════════════ */
+function nextModule() {
+  completedModules.add(currentModule);
+  saveState();
+  if (currentModule < modules.length - 1) {
+    showModule(currentModule + 1);
+  } else {
+    showFinalScreen();
+  }
+}
+
+function prevModule() {
+  if (currentModule > 0) showModule(currentModule - 1);
+}
+
+function showFinalScreen() {
+  updateProgress();
+  renderSidebar();
+  document.getElementById('contentArea').innerHTML = `
+    <div style="text-align:center; padding: 4rem 2rem; animation: fadeUp .5s ease;">
+      <div style="font-size:3.5rem; margin-bottom:1.5rem;">🌸</div>
+      <h2 style="font-family:'Playfair Display',serif; font-size:2.2rem; color:var(--rose-dk); margin-bottom:1rem;">
+        ¡Lo lograste!
+      </h2>
+      <div style="width:60px;height:3px;background:var(--rose);border-radius:2px;margin:1rem auto 1.5rem;"></div>
+      <p style="color:var(--ink-2);font-weight:300;line-height:1.9;max-width:500px;margin:0 auto 2rem;font-size:1.05rem;">
+        Has completado los 10 módulos de tu viaje de transformación. Este no es un final, es el comienzo de vivir desde quien realmente eres.
+      </p>
+      <p style="color:var(--ink-3);font-weight:300;font-style:italic;font-size:.95rem;">
+        Recuerda: la transformación real sucede en cómo vives cada día de ahora en adelante.
+      </p>
+      <div style="margin-top:2.5rem;">
+        <button class="btn-primary" style="width:auto;display:inline-flex;" onclick="showModule(0)">
+          Volver al inicio
+        </button>
+      </div>
+    </div>
+  `;
+}
+
+/* ════════════════════════════════════════════════════════════════
+   SIDEBAR TOGGLE (mobile)
+════════════════════════════════════════════════════════════════ */
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('sidebarOverlay').classList.toggle('show');
+}
+function closeSidebar() {
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sidebarOverlay').classList.remove('show');
 }
 </script>
 </body>
